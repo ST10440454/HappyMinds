@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.HappyMinds" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/orange_primary</item>
+        <item name="colorPrimaryVariant">@color/orange_light</item>
+        <item name="colorOnPrimary">@color/text_white</item>
+        <item name="colorSecondary">@color/teal_primary</item>
+        <item name="colorSecondaryVariant">@color/teal_dark</item>
+        <item name="colorOnSecondary">@color/text_white</item>
+        <item name="android:colorBackground">@color/bg_cream</item>
+        <item name="android:windowBackground">@color/bg_cream</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/bg_white</item>
+        <item name="android:textColorHint">@color/text_light</item>
+    </style>
+
+    <style name="Theme.HappyMinds.Splash" parent="Theme.HappyMinds">
+        <item name="android:windowBackground">@color/bg_cream</item>
+        <item name="android:statusBarColor">@color/bg_cream</item>
+    </style>
+
+    <style name="TextAppearance.HappyMinds.Heading" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:textColor">@color/text_dark</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="TextAppearance.HappyMinds.Subtitle" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">@color/text_light</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="CardStyle" parent="">
+        <item name="android:background">@drawable/card_background</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+
+    <style name="Widget.HappyMinds.Button.Orange" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">@color/orange_primary</item>
+        <item name="android:textColor">@color/text_white</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="Widget.HappyMinds.Button.Teal" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">@color/teal_primary</item>
+        <item name="android:textColor">@color/text_white</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+</resources>

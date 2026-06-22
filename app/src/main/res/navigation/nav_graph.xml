@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.happyminds.app.ui.home.HomeFragment"
+        android:label="Home">
+        <action
+            android:id="@+id/action_home_to_support"
+            app:destination="@id/supportFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/learnFragment"
+        android:name="com.happyminds.app.ui.learn.LearnFragment"
+        android:label="Learn" />
+
+    <fragment
+        android:id="@+id/progressFragment"
+        android:name="com.happyminds.app.ui.progress.ProgressFragment"
+        android:label="Progress" />
+
+    <fragment
+        android:id="@+id/communityFragment"
+        android:name="com.happyminds.app.ui.community.CommunityFragment"
+        android:label="Community" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.happyminds.app.ui.profile.ProfileFragment"
+        android:label="Profile">
+        <action android:id="@+id/action_profile_to_editProfile"
+            app:destination="@id/editProfileFragment" />
+        <action android:id="@+id/action_profile_to_mySchedule"
+            app:destination="@id/myScheduleFragment" />
+        <action android:id="@+id/action_profile_to_achievements"
+            app:destination="@id/achievementsFragment" />
+        <action android:id="@+id/action_profile_to_notifications"
+            app:destination="@id/notificationsFragment" />
+        <action android:id="@+id/action_profile_to_support"
+            app:destination="@id/supportFragment" />
+        <action android:id="@+id/action_profile_to_contactUs"
+            app:destination="@id/contactUsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.happyminds.app.ui.profile.EditProfileFragment"
+        android:label="Edit Profile" />
+
+    <fragment
+        android:id="@+id/myScheduleFragment"
+        android:name="com.happyminds.app.ui.profile.MyScheduleFragment"
+        android:label="My Schedule" />
+
+    <fragment
+        android:id="@+id/achievementsFragment"
+        android:name="com.happyminds.app.ui.profile.AchievementsFragment"
+        android:label="Achievements" />
+
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.happyminds.app.ui.profile.NotificationsFragment"
+        android:label="Notifications" />
+
+    <fragment
+        android:id="@+id/supportFragment"
+        android:name="com.happyminds.app.ui.profile.SupportFragment"
+        android:label="Support" />
+
+    <fragment
+        android:id="@+id/contactUsFragment"
+        android:name="com.happyminds.app.ui.profile.ContactUsFragment"
+        android:label="Contact Us" />
+
+</navigation>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Happy Minds</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_learn">Learn</string>
+    <string name="nav_progress">Progress</string>
+    <string name="nav_community">Community</string>
+    <string name="nav_profile">Profile</string>
+    <string name="welcome_back">Welcome back,</string>
+    <string name="learning_streak">Your Learning Streak</string>
+    <string name="days">days</string>
+    <string name="todays_classes">Today\'s Classes</string>
+    <string name="view_all">View All</string>
+    <string name="continue_learning">Continue Learning</string>
+    <string name="join">Join</string>
+    <string name="learning_center">Learning Center</string>
+    <string name="search_lessons">Search lessons…</string>
+    <string name="my_progress">My Progress</string>
+    <string name="track_journey">Track your learning journey</string>
+    <string name="lessons_completed">Lessons Completed</string>
+    <string name="badges_earned">Badges Earned</string>
+    <string name="subject_progress">Subject Progress</string>
+    <string name="recent_achievements">Recent Achievements</string>
+    <string name="community">Community</string>
+    <string name="connect_classmates">Connect with classmates and teachers</string>
+    <string name="upcoming_events">Upcoming Events</string>
+    <string name="community_updates">Community Updates</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="my_schedule">My Schedule</string>
+    <string name="achievements">Achievements</string>
+    <string name="notifications">Notifications</string>
+    <string name="support_happy_minds">Support HAPPY MINDS</string>
+    <string name="parent_dashboard">Parent Dashboard</string>
+    <string name="parent_portal">Parent Portal</string>
+    <string name="track_child_progress">Track your child\'s progress</string>
+    <string name="access_parent_view">Access Parent View</string>
+    <string name="settings">Settings</string>
+    <string name="help_support">Help &amp; Support</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="review">Review</string>
+    <string name="continue_btn">Continue</string>
+    <string name="rsvp">RSVP</string>
+    <string name="learn_more">Learn More</string>
+</resources>
