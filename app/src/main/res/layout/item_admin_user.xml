@@ -56,7 +56,7 @@
                     android:textSize="13sp" />
 
                 <TextView
-                    android:id="@+id/tvUserDetail"
+                    android:id="@+id/tvChildInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Age 10 · Grade 4"
@@ -66,7 +66,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tvStatus"
+                android:id="@+id/tvUserStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_light_orange"

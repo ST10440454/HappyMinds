@@ -39,6 +39,15 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/tvDonationCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 Donations"
+            android:textColor="@color/text_white"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <TextView
             android:id="@+id/tvUserCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -239,7 +248,7 @@
 
             <!-- Sub Filter chips -->
             <LinearLayout
-                android:id="@+id/layoutUserSubFilters"
+                android:id="@+id/layoutSubFilters"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -248,25 +257,36 @@
                 android:gravity="center_vertical">
 
                 <TextView
-                    android:id="@+id/chipPending"
+                    android:id="@+id/chipUsers"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:background="@drawable/bg_chip_selected"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="8dp"
-                    android:text="Pending"
+                    android:text="Users"
                     android:textColor="@color/text_white"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/chipApproved"
+                    android:id="@+id/chipVolunteers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_chip_unselected"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp"
+                    android:text="Volunteers"
+                    android:textColor="@color/text_dark" />
+
+                <TextView
+                    android:id="@+id/chipDonations"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_chip_unselected"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="8dp"
-                    android:text="Approved"
+                    android:text="Donations"
                     android:textColor="@color/text_dark" />
 
             </LinearLayout>
@@ -278,6 +298,24 @@
                 android:clipToPadding="false"
                 android:paddingHorizontal="16dp"
                 android:paddingBottom="16dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvVolunteers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingHorizontal="16dp"
+                android:paddingBottom="16dp"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvDonations"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingHorizontal="16dp"
+                android:paddingBottom="16dp"
+                android:visibility="gone" />
         </LinearLayout>
 
     </FrameLayout>

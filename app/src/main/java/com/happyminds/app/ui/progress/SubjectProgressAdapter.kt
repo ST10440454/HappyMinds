@@ -3,52 +3,32 @@ package com.happyminds.app.ui.progress
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.happyminds.app.R
-import com.happyminds.app.data.SubjectProgress
+import com.happyminds.app.data.Subject
 import com.happyminds.app.databinding.ItemSubjectProgressBinding
 
 class SubjectProgressAdapter(
-    private val items: List<SubjectProgress>
-) : RecyclerView.Adapter<SubjectProgressAdapter.ViewHolder>() {
+    private val items: List<SubjectProgressRow>
+) : RecyclerView.Adapter<SubjectProgressAdapter.VH>() {
 
-    inner class ViewHolder(private val binding: ItemSubjectProgressBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(item: SubjectProgress) {
-            binding.tvSubjectName.text = item.name
-            binding.tvLevel.text = item.level
-            binding.tvPercent.text = "${item.percent}%"
-            binding.progressSubject.progress = item.percent
-            binding.ivSubjectIcon.setImageResource(item.iconRes)
-
-            if (item.isTeal) {
-                binding.ivSubjectIcon.setBackgroundResource(R.drawable.bg_icon_teal)
-                binding.progressSubject.progressDrawable =
-                    binding.root.context.getDrawable(R.drawable.progress_bar_teal)
-                binding.tvPercent.setTextColor(
-                    binding.root.context.getColor(R.color.teal_primary)
-                )
-            } else {
-                binding.ivSubjectIcon.setBackgroundResource(R.drawable.bg_icon_orange)
-                binding.progressSubject.progressDrawable =
-                    binding.root.context.getDrawable(R.drawable.progress_bar_orange)
-                binding.tvPercent.setTextColor(
-                    binding.root.context.getColor(R.color.orange_primary)
-                )
+    inner class VH(private val b: ItemSubjectProgressBinding) : RecyclerView.ViewHolder(b.root) {
+        fun bind(row: SubjectProgressRow) {
+            b.tvSubjectName.text  = row.subject.displayName
+            b.tvSubjectPct.text   = "${row.percent}%"
+            b.tvSubjectDone.text  = "${row.doneLessons}/${row.total} lessons"
+            b.progressSubject.progress = row.percent
+            val emoji = when (row.subject) {
+                Subject.MATHS          -> "🔢"
+                Subject.ENGLISH        -> "📖"
+                Subject.NATURAL_SCIENCE-> "🔬"
+                Subject.LIFE_SKILLS    -> "🌱"
             }
+            b.tvSubjectEmoji?.text = emoji
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemSubjectProgressBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        )
-        return ViewHolder(binding)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        VH(ItemSubjectProgressBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position])
-    }
-
+    override fun onBindViewHolder(holder: VH, pos: Int) = holder.bind(items[pos])
     override fun getItemCount() = items.size
 }

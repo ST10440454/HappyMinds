@@ -19,38 +19,34 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".MainActivity"
+        <activity android:name=".MainActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity
-            android:name=".ui.auth.LoginActivity"
+        <activity android:name=".ui.auth.LoginActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity
-            android:name=".ui.auth.RegisterActivity"
+        <activity android:name=".ui.auth.RegisterActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity
-            android:name=".ui.auth.SetupProfileActivity"
+        <activity android:name=".ui.auth.SetupProfileActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity
-            android:name=".ui.auth.VolunteerRegistrationActivity"
+        <activity android:name=".ui.auth.VolunteerRegistrationActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity
-            android:name=".ui.auth.AdminLoginActivity"
+        <activity android:name=".ui.auth.AdminLoginActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity
-            android:name=".ui.admin.AdminDashboardActivity"
+        <activity android:name=".ui.admin.AdminDashboardActivity"
+            android:exported="false" />
+
+        <activity android:name=".ui.learn.LessonPlayerActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 

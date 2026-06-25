@@ -1,169 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_cream">
+    android:orientation="vertical"
+    android:background="@color/background_light">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="24dp">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/my_progress"
-            android:textColor="@color/text_dark"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="56dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/track_journey"
-            android:textColor="@color/text_light"
-            android:textSize="14sp"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="4dp"
-            android:paddingBottom="20dp" />
-
-        <!-- Stats row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="16dp"
-            android:paddingBottom="20dp">
+            android:orientation="vertical">
 
+            <!-- Overall card -->
             <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/bg_light_orange">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/bg_white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="12dp">
-
-                    <ImageView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/ic_trend_up"
-                        android:contentDescription="Trend" />
+                    android:padding="20dp"
+                    android:gravity="center">
 
                     <TextView
-                        android:id="@+id/tvLessonsCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="28"
-                        android:textColor="@color/text_dark"
-                        android:textSize="28sp"
+                        android:text="Overall Progress"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_grey"
+                        android:letterSpacing="0.05"/>
+
+                    <TextView
+                        android:id="@+id/tvOverallPct"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0%"
+                        android:textSize="48sp"
                         android:textStyle="bold"
-                        android:layout_marginTop="4dp" />
+                        android:textColor="@color/orange_primary"
+                        android:layout_marginTop="4dp"/>
+
+                    <ProgressBar
+                        android:id="@+id/progressOverall"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="14dp"
+                        android:layout_marginTop="10dp"
+                        android:max="100"
+                        android:progressDrawable="@drawable/progress_bar_orange"/>
 
                     <TextView
+                        android:id="@+id/tvCompleted"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/lessons_completed"
-                        android:textColor="@color/text_medium"
-                        android:textSize="11sp"
-                        android:gravity="center" />
+                        android:layout_marginTop="8dp"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_medium"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/bg_light_teal">
+            <!-- By Subject -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="By Subject"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_dark"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="12dp">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSubjectProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"/>
 
-                    <ImageView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/ic_award"
-                        android:contentDescription="Badge" />
+            <!-- Per-lesson -->
+            <TextView
+                android:id="@+id/tvLessonsHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="Completed Lessons"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_dark"/>
 
-                    <TextView
-                        android:id="@+id/tvBadgesCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="12"
-                        android:textColor="@color/text_dark"
-                        android:textSize="28sp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="4dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/badges_earned"
-                        android:textColor="@color/text_medium"
-                        android:textSize="11sp"
-                        android:gravity="center" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvLessonsProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:paddingBottom="24dp"/>
 
         </LinearLayout>
-
-        <!-- Subject progress -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/subject_progress"
-            android:textColor="@color/text_dark"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:paddingHorizontal="20dp"
-            android:paddingBottom="12dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvSubjectProgress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:nestedScrollingEnabled="false"
-            android:clipToPadding="false" />
-
-        <!-- Achievements -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/recent_achievements"
-            android:textColor="@color/text_dark"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="20dp"
-            android:paddingBottom="12dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvAchievements"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:nestedScrollingEnabled="false"
-            android:clipToPadding="false" />
-
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</LinearLayout>

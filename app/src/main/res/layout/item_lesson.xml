@@ -4,92 +4,107 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
     android:layout_marginBottom="10dp"
-    app:cardCornerRadius="14dp"
-    app:cardElevation="2dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="3dp"
     app:cardBackgroundColor="@color/bg_white">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="14dp">
+        android:orientation="horizontal"
+        android:padding="18dp"
+        android:gravity="center_vertical">
 
+        <!-- Icon -->
         <ImageView
             android:id="@+id/ivLessonIcon"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_orange"
-            android:src="@drawable/ic_book"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:padding="10dp"
-            android:contentDescription="Lesson"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:scaleType="centerInside"
+            android:background="@drawable/bg_icon_orange"/>
 
-        <TextView
-            android:id="@+id/tvLessonName"
+        <!-- Info -->
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Phonics Basics"
-            android:textColor="@color/text_dark"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:layout_marginStart="12dp"
-            app:layout_constraintStart_toEndOf="@id/ivLessonIcon"
-            app:layout_constraintEnd_toStartOf="@id/btnAction"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp">
 
-        <TextView
-            android:id="@+id/tvLessonDuration"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="15 min"
-            android:textColor="@color/text_light"
-            android:textSize="12sp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="2dp"
-            app:layout_constraintStart_toEndOf="@id/ivLessonIcon"
-            app:layout_constraintEnd_toStartOf="@id/btnAction"
-            app:layout_constraintTop_toBottomOf="@id/tvLessonName" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-        <ProgressBar
-            android:id="@+id/progressLesson"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="0dp"
-            android:layout_height="6dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="8dp"
-            android:progress="100"
-            android:progressDrawable="@drawable/progress_bar_orange"
-            app:layout_constraintStart_toEndOf="@id/ivLessonIcon"
-            app:layout_constraintEnd_toStartOf="@id/btnAction"
-            app:layout_constraintTop_toBottomOf="@id/tvLessonDuration" />
+                <TextView
+                    android:id="@+id/tvLessonName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_dark"
+                    android:maxLines="2"/>
 
-        <TextView
-            android:id="@+id/tvProgressPct"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="100%"
-            android:textColor="@color/text_light"
-            android:textSize="11sp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="2dp"
-            app:layout_constraintStart_toEndOf="@id/ivLessonIcon"
-            app:layout_constraintEnd_toStartOf="@id/btnAction"
-            app:layout_constraintTop_toBottomOf="@id/progressLesson" />
+                <TextView
+                    android:id="@+id/tvSubjectTag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="3dp"
+                    android:background="@drawable/bg_chip_unselected"
+                    android:textSize="10sp"
+                    android:textColor="@color/text_medium"
+                    android:maxLines="1"/>
+            </LinearLayout>
 
-        <Button
-            android:id="@+id/btnAction"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:text="@string/review"
-            android:textColor="@color/text_white"
-            android:textSize="13sp"
-            android:background="@drawable/bg_button_orange"
-            android:paddingHorizontal="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            <TextView
+                android:id="@+id/tvLessonDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textSize="12sp"
+                android:textColor="@color/text_medium"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ProgressBar
+                android:id="@+id/progressLesson"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:layout_marginTop="8dp"
+                android:max="100"
+                android:progressDrawable="@drawable/progress_bar_orange"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="4dp">
+
+                <TextView
+                    android:id="@+id/tvProgressPct"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="12sp"
+                    android:textColor="@color/orange_primary"
+                    android:text="0%"/>
+
+                <Button
+                    android:id="@+id/btnAction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Start"
+                    android:textSize="12sp"
+                    android:backgroundTint="@color/orange_primary"
+                    android:textColor="@color/white"
+                    android:paddingHorizontal="14dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 </androidx.cardview.widget.CardView>

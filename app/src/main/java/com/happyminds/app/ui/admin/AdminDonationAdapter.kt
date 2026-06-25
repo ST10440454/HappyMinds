@@ -6,36 +6,27 @@ import androidx.recyclerview.widget.RecyclerView
 import com.happyminds.app.data.local.Donation
 import com.happyminds.app.databinding.ItemAdminDonationBinding
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
-class AdminDonationAdapter(private var donations: List<Donation>) : RecyclerView.Adapter<AdminDonationAdapter.DonationViewHolder>() {
+class AdminDonationAdapter(
+    private val items: List<Donation>
+) : RecyclerView.Adapter<AdminDonationAdapter.VH>() {
 
-    fun updateList(newList: List<Donation>) {
-        donations = newList
-        notifyDataSetChanged()
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DonationViewHolder {
-        val binding = ItemAdminDonationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return DonationViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: DonationViewHolder, position: Int) {
-        holder.bind(donations[position])
-    }
-
-    override fun getItemCount() = donations.size
-
-    class DonationViewHolder(private val binding: ItemAdminDonationBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(donation: Donation) {
-            binding.tvAmount.text = donation.amount
-            binding.tvDonorName.text = donation.fullName
-            binding.tvDonorEmail.text = donation.email
-            binding.tvFrequency.text = donation.frequency
-            
-            val date = Date(donation.timestamp)
-            val format = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-            binding.tvDate.text = format.format(date)
+    inner class VH(private val b: ItemAdminDonationBinding) : RecyclerView.ViewHolder(b.root) {
+        fun bind(d: Donation) {
+            b.tvDonorName.text    = d.fullName
+            b.tvAmount.text       = "R${d.amount} · ${d.frequency}"
+            b.tvDonationDate.text = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+                .format(Date(d.timestamp))
+            // mask card number for display
+            b.tvMessage?.text = "Card: **** **** **** ${d.cardNumber.takeLast(4)}"
         }
     }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        VH(ItemAdminDonationBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+
+    override fun onBindViewHolder(holder: VH, pos: Int) = holder.bind(items[pos])
+    override fun getItemCount() = items.size
 }

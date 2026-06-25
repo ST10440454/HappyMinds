@@ -1,121 +1,124 @@
 package com.happyminds.app.ui.learn
 
-import android.graphics.drawable.GradientDrawable
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.happyminds.app.R
+import com.happyminds.app.data.Curriculum
 import com.happyminds.app.data.LessonItem
+import com.happyminds.app.data.Subject
+import com.happyminds.app.data.UserRepository
+import com.happyminds.app.data.UserSession
 import com.happyminds.app.databinding.FragmentLearnBinding
+import kotlinx.coroutines.launch
 
 class LearnFragment : Fragment() {
 
     private var _binding: FragmentLearnBinding? = null
     private val binding get() = _binding!!
-
     private lateinit var adapter: LessonAdapter
-    private var selectedCategory = "All"
+    private lateinit var repo: UserRepository
+    private var selectedSubject: Subject? = null
+    private var allLessons: List<LessonItem> = emptyList()
 
-    private val allLessons = listOf(
-        LessonItem("Phonics Basics", "15 min", 100, R.drawable.ic_book, isOrange = true),
-        LessonItem("Addition & Subtraction", "20 min", 75, R.drawable.ic_book, isOrange = true),
-        LessonItem("Parts of a Plant", "18 min", 40, R.drawable.ic_video, isOrange = false),
-        LessonItem("Creative Writing", "25 min", 60, R.drawable.ic_book, isOrange = true),
-        LessonItem("Multiplication Tables", "20 min", 30, R.drawable.ic_book, isOrange = true),
-        LessonItem("The Water Cycle", "15 min", 0, R.drawable.ic_video, isOrange = false),
-        LessonItem("Art & Colour", "30 min", 0, R.drawable.ic_star, isOrange = false),
-        LessonItem("Reading Comprehension", "20 min", 85, R.drawable.ic_book, isOrange = true)
-    )
-
-    private val categoryMap = mapOf(
-        "All" to allLessons,
-        "Reading" to allLessons.filter { it.name.contains("Read") || it.name.contains("Writing") || it.name.contains("Phonics") },
-        "Math" to allLessons.filter { it.name.contains("Addition") || it.name.contains("Multiplication") },
-        "Science" to allLessons.filter { it.name.contains("Plant") || it.name.contains("Water") },
-        "Arts" to allLessons.filter { it.name.contains("Art") || it.name.contains("Creative") }
-    )
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentLearnBinding.inflate(inflater, container, false)
+    override fun onCreateView(inflater: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
+        _binding = FragmentLearnBinding.inflate(inflater, c, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        repo = UserRepository(requireContext())
         setupRecyclerView()
-        setupChips()
+        loadLessons()
+        setupSubjectChips()
         setupSearch()
     }
 
     private fun setupRecyclerView() {
-        adapter = LessonAdapter(allLessons) { lesson ->
-            Toast.makeText(requireContext(), "Opening: ${lesson.name}", Toast.LENGTH_SHORT).show()
-        }
+        adapter = LessonAdapter(emptyList()) { lesson -> openLesson(lesson) }
         binding.rvLessons.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@LearnFragment.adapter
         }
     }
 
-    private fun setupChips() {
-        val chips = listOf(
-            binding.chipAll to "All",
-            binding.chipReading to "Reading",
-            binding.chipMath to "Math",
-            binding.chipScience to "Science",
-            binding.chipArts to "Arts"
-        )
-        chips.forEach { (chip, category) ->
-            chip.setOnClickListener {
-                selectedCategory = category
-                updateChipSelection(chips, chip)
-                filterLessons(binding.etSearch.text.toString(), category)
+    private fun openLesson(lesson: LessonItem) {
+        startActivity(Intent(requireContext(), LessonPlayerActivity::class.java).apply {
+            putExtra(LessonPlayerActivity.EXTRA_LESSON_ID,   lesson.id)
+            putExtra(LessonPlayerActivity.EXTRA_LESSON_NAME, lesson.name)
+            putExtra(LessonPlayerActivity.EXTRA_NOTES,       lesson.notes)
+            putExtra(LessonPlayerActivity.EXTRA_DESCRIPTION, lesson.description)
+            putExtra(LessonPlayerActivity.EXTRA_DURATION,    lesson.duration)
+        })
+    }
+
+    private fun loadLessons() {
+        val grade = UserSession.currentUser?.grade?.toIntOrNull() ?: 1
+        binding.tvGradeLabel?.text = "Grade $grade Learning Centre"
+
+        lifecycleScope.launch {
+            val userId = UserSession.currentUser?.id ?: return@launch
+            val progressMap = repo.getAllProgress(userId)
+            allLessons = Curriculum.getLessonsForGrade(grade).map { lesson ->
+                lesson.copy(progressPercent = progressMap[lesson.id] ?: 0)
             }
+            applyFilter()
         }
     }
 
-    private fun updateChipSelection(chips: List<Pair<TextView, String>>, selected: TextView) {
-        chips.forEach { (chip, _) ->
-            if (chip == selected) {
-                chip.setBackgroundResource(R.drawable.bg_chip_selected)
-                chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_white))
-            } else {
-                chip.setBackgroundResource(R.drawable.bg_chip_unselected)
-                chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
+    private fun setupSubjectChips() {
+        val chips = listOf(
+            binding.chipAll        to null,
+            binding.chipMaths      to Subject.MATHS,
+            binding.chipEnglish    to Subject.ENGLISH,
+            binding.chipScience    to Subject.NATURAL_SCIENCE,
+            binding.chipLifeSkills to Subject.LIFE_SKILLS
+        )
+        chips.forEach { (chip, subject) ->
+            chip?.setOnClickListener {
+                selectedSubject = subject
+                chips.forEach { (c, _) ->
+                    if (c == chip) {
+                        c?.setBackgroundResource(R.drawable.bg_chip_selected)
+                        c?.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                    } else {
+                        c?.setBackgroundResource(R.drawable.bg_chip_unselected)
+                        c?.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_dark))
+                    }
+                }
+                applyFilter()
             }
         }
     }
 
     private fun setupSearch() {
         binding.etSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                filterLessons(s.toString(), selectedCategory)
-            }
+            override fun beforeTextChanged(s: CharSequence?, st: Int, c: Int, a: Int) {}
+            override fun onTextChanged(s: CharSequence?, st: Int, b: Int, c: Int) { applyFilter() }
             override fun afterTextChanged(s: Editable?) {}
         })
     }
 
-    private fun filterLessons(query: String, category: String) {
-        val base = categoryMap[category] ?: allLessons
-        val filtered = if (query.isBlank()) base
-        else base.filter { it.name.contains(query, ignoreCase = true) }
+    private fun applyFilter() {
+        val query = binding.etSearch.text.toString()
+        var filtered = if (selectedSubject == null) allLessons
+                       else allLessons.filter { it.subject == selectedSubject }
+        if (query.isNotBlank()) {
+            filtered = filtered.filter { it.name.contains(query, ignoreCase = true) }
+        }
         adapter.updateList(filtered)
+        binding.tvEmptyState?.visibility = if (filtered.isEmpty()) View.VISIBLE else View.GONE
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+    override fun onResume() { super.onResume(); loadLessons() }
+    override fun onDestroyView() { super.onDestroyView(); _binding = null }
 }

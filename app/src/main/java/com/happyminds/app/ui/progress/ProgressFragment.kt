@@ -5,61 +5,83 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.happyminds.app.R
-import com.happyminds.app.data.Achievement
-import com.happyminds.app.data.SubjectProgress
+import com.happyminds.app.data.Curriculum
+import com.happyminds.app.data.Subject
+import com.happyminds.app.data.UserRepository
+import com.happyminds.app.data.UserSession
 import com.happyminds.app.databinding.FragmentProgressBinding
+import kotlinx.coroutines.launch
 
 class ProgressFragment : Fragment() {
 
     private var _binding: FragmentProgressBinding? = null
     private val binding get() = _binding!!
+    private lateinit var repo: UserRepository
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentProgressBinding.inflate(inflater, container, false)
+    override fun onCreateView(inflater: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
+        _binding = FragmentProgressBinding.inflate(inflater, c, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupSubjectProgress()
-        setupAchievements()
+        repo = UserRepository(requireContext())
+        loadProgress()
     }
 
-    private fun setupSubjectProgress() {
-        val subjects = listOf(
-            SubjectProgress("Reading", "Level 3", 85, R.drawable.ic_book, isTeal = false),
-            SubjectProgress("Mathematics", "Level 2", 72, R.drawable.ic_book, isTeal = true),
-            SubjectProgress("Science", "Level 2", 68, R.drawable.ic_video, isTeal = false)
-        )
-        binding.rvSubjectProgress.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = SubjectProgressAdapter(subjects)
+    override fun onResume() { super.onResume(); loadProgress() }
+
+    private fun loadProgress() {
+        val user  = UserSession.currentUser ?: return
+        val grade = user.grade.toIntOrNull() ?: 1
+
+        lifecycleScope.launch {
+            val progressMap = repo.getAllProgress(user.id)
+            val allLessons  = Curriculum.getLessonsForGrade(grade)
+
+            // Overall stats
+            val total     = allLessons.size
+            val completed = allLessons.count { (progressMap[it.id] ?: 0) >= 100 }
+            val avgPct    = if (total == 0) 0 else allLessons.sumOf { progressMap[it.id] ?: 0 } / total
+
+            binding.tvOverallPct.text     = "$avgPct%"
+            binding.tvCompleted.text      = "$completed / $total lessons completed"
+            binding.progressOverall.progress = avgPct
+
+            // Per-subject breakdown
+            val subjectRows = Subject.entries.map { subject ->
+                val subjectLessons = allLessons.filter { it.subject == subject }
+                val subjectPct     = if (subjectLessons.isEmpty()) 0
+                    else subjectLessons.sumOf { progressMap[it.id] ?: 0 } / subjectLessons.size
+                val done           = subjectLessons.count { (progressMap[it.id] ?: 0) >= 100 }
+                SubjectProgressRow(
+                    subject    = subject,
+                    percent    = subjectPct,
+                    doneLessons= done,
+                    total      = subjectLessons.size
+                )
+            }
+
+            val adapter = SubjectProgressAdapter(subjectRows)
+            binding.rvSubjectProgress.apply {
+                layoutManager = LinearLayoutManager(requireContext())
+                this.adapter  = adapter
+            }
+
+            // Individual lesson list - Only show completed lessons
+            val lessonRows = allLessons
+                .map { it.copy(progressPercent = progressMap[it.id] ?: 0) }
+                .filter { it.progressPercent >= 100 }
+
+            val lessonAdapter = ProgressLessonAdapter(lessonRows)
+            binding.rvLessonsProgress?.apply {
+                layoutManager = LinearLayoutManager(requireContext())
+                this.adapter  = lessonAdapter
+            }
         }
     }
 
-    private fun setupAchievements() {
-        val achievements = listOf(
-            Achievement("First Lesson", R.drawable.ic_star, isTeal = false),
-            Achievement("Week Streak", R.drawable.ic_heart, isTeal = true),
-            Achievement("Math Master", R.drawable.ic_award, isTeal = false),
-            Achievement("Reader", R.drawable.ic_book, isTeal = false),
-            Achievement("Artist", R.drawable.ic_star, isTeal = true),
-            Achievement("Scientist", R.drawable.ic_video, isTeal = false)
-        )
-        binding.rvAchievements.apply {
-            layoutManager = GridLayoutManager(requireContext(), 3)
-            adapter = AchievementAdapter(achievements)
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+    override fun onDestroyView() { super.onDestroyView(); _binding = null }
 }

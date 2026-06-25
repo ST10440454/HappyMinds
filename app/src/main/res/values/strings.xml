@@ -41,4 +41,5 @@
     <string name="continue_btn">Continue</string>
     <string name="rsvp">RSVP</string>
     <string name="learn_more">Learn More</string>
+    <string name="start">Start</string>
 </resources>

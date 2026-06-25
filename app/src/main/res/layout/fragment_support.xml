@@ -111,7 +111,7 @@
                         android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/etDonationAmount"
+                        android:id="@+id/etAmount"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="8dp"
@@ -152,7 +152,7 @@
                         android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/etDonationFullName"
+                        android:id="@+id/etFullName"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="8dp"
@@ -174,7 +174,7 @@
                         android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/etDonationEmail"
+                        android:id="@+id/etEmail"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="8dp"
@@ -277,7 +277,7 @@
 
                     <!-- Complete donation button -->
                     <Button
-                        android:id="@+id/btnCompleteDonation"
+                        android:id="@+id/btnDonate"
                         android:layout_width="match_parent"
                         android:layout_height="52dp"
                         android:layout_marginTop="24dp"

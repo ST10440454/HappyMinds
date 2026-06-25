@@ -79,6 +79,28 @@
             android:orientation="vertical"
             android:paddingHorizontal="16dp">
 
+            <!-- Full Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Full Name"
+                android:textColor="@color/text_medium"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:paddingBottom="6dp" />
+
+            <EditText
+                android:id="@+id/etFullName"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:hint="Your full name"
+                android:textColor="@color/text_dark"
+                android:textSize="15sp"
+                android:background="@drawable/card_background"
+                android:paddingHorizontal="16dp"
+                android:inputType="textPersonName"
+                android:layout_marginBottom="16dp" />
+
             <!-- Child's Name -->
             <TextView
                 android:layout_width="wrap_content"
@@ -94,7 +116,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:hint="Enter child's name"
-                android:text="Thato Khumalo"
                 android:textColor="@color/text_dark"
                 android:textSize="15sp"
                 android:background="@drawable/card_background"
@@ -150,7 +171,7 @@
 
             <!-- Save Button -->
             <Button
-                android:id="@+id/btnSaveProfile"
+                android:id="@+id/btnSave"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:text="Save Changes"

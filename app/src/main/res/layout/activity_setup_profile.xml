@@ -1,138 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_cream"
+    android:background="@color/white"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="24dp"
-        android:paddingBottom="32dp">
+        android:padding="28dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"/>
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:paddingTop="60dp"
-            android:paddingBottom="40dp">
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:text="Set Up Child Profile"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="🎨"
-                android:textSize="64sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Setup Child's Profile"
-                android:textColor="@color/text_dark"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tell us about your little learner"
-                android:textColor="@color/text_medium"
-                android:textSize="15sp"
-                android:layout_marginTop="8dp" />
-        </LinearLayout>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="@color/bg_white">
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp"
+            android:text="We'll personalise the learning centre for your child"
+            android:textSize="14sp"
+            android:textColor="@color/text_grey"
+            android:gravity="center"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="24dp">
+        <!-- Child Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="Child's Name"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Child's Full Name"
-                    android:textColor="@color/text_medium"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
+        <EditText
+            android:id="@+id/etChildName"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="6dp"
+            android:hint="e.g. Lebo"
+            android:inputType="textPersonName"
+            android:background="@drawable/bg_input_field"
+            android:paddingHorizontal="14dp"
+            android:textSize="15sp"
+            android:textColor="@color/text_dark"/>
 
-                <EditText
-                    android:id="@+id/etChildName"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/card_background"
-                    android:hint="Thato Khumalo"
-                    android:inputType="textPersonName"
-                    android:paddingHorizontal="16dp"
-                    android:textColor="@color/text_dark"
-                    android:textSize="15sp" />
+        <!-- Age -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Age"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Child's Age"
-                    android:textColor="@color/text_medium"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="20dp" />
+        <EditText
+            android:id="@+id/etAge"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="6dp"
+            android:hint="e.g. 9"
+            android:inputType="number"
+            android:background="@drawable/bg_input_field"
+            android:paddingHorizontal="14dp"
+            android:textSize="15sp"
+            android:textColor="@color/text_dark"/>
 
-                <EditText
-                    android:id="@+id/etAge"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/card_background"
-                    android:hint="e.g. 10"
-                    android:inputType="number"
-                    android:paddingHorizontal="16dp"
-                    android:textColor="@color/text_dark"
-                    android:textSize="15sp" />
+        <!-- Grade -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Grade (1 – 7)"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Child's Grade"
-                    android:textColor="@color/text_medium"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="20dp" />
+        <Spinner
+            android:id="@+id/spinnerGrade"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/bg_input_field"
+            android:paddingHorizontal="10dp"/>
 
-                <EditText
-                    android:id="@+id/etGrade"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/card_background"
-                    android:hint="e.g. Grade 4"
-                    android:inputType="text"
-                    android:paddingHorizontal="16dp"
-                    android:textColor="@color/text_dark"
-                    android:textSize="15sp" />
-
-                <Button
-                    android:id="@+id/btnSaveProfile"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="32dp"
-                    android:background="@drawable/bg_button_orange"
-                    android:text="Start Learning"
-                    android:textColor="@color/text_white"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        <Button
+            android:id="@+id/btnSaveProfile"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="32dp"
+            android:text="Save Profile &amp; Start Learning 🚀"
+            android:textSize="16sp"
+            android:backgroundTint="@color/orange_primary"
+            android:textColor="@color/white"/>
 
     </LinearLayout>
 </ScrollView>

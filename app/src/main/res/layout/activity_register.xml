@@ -110,17 +110,25 @@
                     android:textStyle="bold"
                     android:layout_marginTop="20dp" />
 
-                <EditText
-                    android:id="@+id/etPassword"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="52dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/card_background"
-                    android:inputType="textPassword"
-                    android:hint="Create password"
-                    android:paddingHorizontal="16dp"
-                    android:textColor="@color/text_dark"
-                    android:textSize="15sp" />
+                    app:hintEnabled="false"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="@color/orange_primary">
+
+                    <EditText
+                        android:id="@+id/etPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:background="@drawable/card_background"
+                        android:inputType="textPassword"
+                        android:hint="Create password"
+                        android:paddingHorizontal="16dp"
+                        android:textColor="@color/text_dark"
+                        android:textSize="15sp" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
                     android:id="@+id/btnRegister"
@@ -132,6 +140,14 @@
                     android:textColor="@color/text_white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

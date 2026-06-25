@@ -2,194 +2,145 @@ package com.happyminds.app.ui.admin
 
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.happyminds.app.R
-import com.happyminds.app.data.UserManager
+import com.happyminds.app.data.UserRepository
 import com.happyminds.app.data.UserStatus
-import com.happyminds.app.data.local.UserDatabase
 import com.happyminds.app.databinding.ActivityAdminDashboardBinding
 import kotlinx.coroutines.launch
 
 class AdminDashboardActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAdminDashboardBinding
+    private lateinit var repo: UserRepository
     private lateinit var userAdapter: AdminUserAdapter
-    private lateinit var donationAdapter: AdminDonationAdapter
     private lateinit var volunteerAdapter: AdminVolunteerAdapter
-    
-    private enum class Section { OVERVIEW, USERS, DONATIONS, VOLUNTEERS }
-    private enum class UserFilter { PENDING, APPROVED }
-    
-    private var currentSection = Section.OVERVIEW
-    private var currentUserFilter = UserFilter.PENDING
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAdminDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        repo = UserRepository(this)
 
-        setupRecyclerViews()
-        setupClickListeners()
-        updateDashboard()
+        setupOverviewCards()
+        setupLists()
+        setupFilters()
+
+        binding.btnBack?.setOnClickListener { finish() }
     }
 
-    private fun setupRecyclerViews() {
-        userAdapter = AdminUserAdapter(emptyList()) { user, newStatus ->
-            UserManager.updateUserStatus(user.id, newStatus)
-            updateDashboard()
-        }
-        donationAdapter = AdminDonationAdapter(emptyList())
-        volunteerAdapter = AdminVolunteerAdapter(emptyList()) { volunteer, newStatus ->
-            UserManager.updateUserStatus(volunteer.id, newStatus)
-            updateDashboard()
-        }
+    private fun setupOverviewCards() {
+        val allUsers = repo.getAllUsers()
+        val learners = allUsers.filter { !it.isVolunteer }
+        val volunteers = allUsers.filter { it.isVolunteer }
         
-        binding.rvUsers.layoutManager = LinearLayoutManager(this)
-    }
-
-    private fun setupClickListeners() {
-        binding.btnBack.setOnClickListener {
-            if (currentSection == Section.OVERVIEW) {
-                finish()
-            } else {
-                currentSection = Section.OVERVIEW
-                updateDashboard()
-            }
-        }
-
-        // Summary Card Clicks
-        binding.cardTotalUsers.setOnClickListener {
-            currentSection = Section.USERS
-            updateDashboard()
-        }
-
-        binding.cardDonationsOverview.setOnClickListener {
-            currentSection = Section.DONATIONS
-            updateDashboard()
-        }
-
-        binding.cardVolunteersOverview.setOnClickListener {
-            currentSection = Section.VOLUNTEERS
-            updateDashboard()
-        }
-
-        // Sub filters for Users
-        binding.chipPending.setOnClickListener {
-            currentUserFilter = UserFilter.PENDING
-            updateDashboard()
-        }
-
-        binding.chipApproved.setOnClickListener {
-            currentUserFilter = UserFilter.APPROVED
-            updateDashboard()
-        }
-    }
-
-    private fun updateDashboard() {
-        updateStats()
-        updateUIState()
-    }
-
-    private fun updateStats() {
-        val allUsers = UserManager.getUsers().filter { !it.isVolunteer }
-        binding.tvTotalUsersCount.text = allUsers.size.toString()
+        binding.tvTotalUsersCount.text = learners.size.toString()
+        binding.tvVolunteersCount.text = volunteers.size.toString()
         
-        val allVolunteers = UserManager.getUsers().filter { it.isVolunteer }
-        binding.tvVolunteersCount.text = allVolunteers.size.toString()
-
+        // Setup donations total
         lifecycleScope.launch {
-            var totalAmount = 0
-            UserManager.getUsers().forEach { user ->
-                val userDb = UserDatabase.getInstance(applicationContext, user.id)
-                val userDonations = userDb.donationDao().getAllDonations()
-                userDonations.forEach { totalAmount += it.amount.toDoubleOrNull()?.toInt() ?: 0 }
-            }
-            binding.tvDonationsAmount.text = "R $totalAmount"
+            try {
+                val sharedDb = com.happyminds.app.data.local.UserDatabase.getInstance(this@AdminDashboardActivity, "shared")
+                val donations = sharedDb.donationDao().getAllDonations()
+                val total = donations.sumOf { it.amount.toDoubleOrNull() ?: 0.0 }
+                binding.tvDonationsAmount.text = "R ${String.format("%.2f", total)}"
+            } catch (_: Exception) {}
+        }
+
+        binding.cardTotalUsers.setOnClickListener { showSection("users") }
+        binding.cardVolunteersOverview.setOnClickListener { showSection("volunteers") }
+        binding.cardDonationsOverview.setOnClickListener { showSection("donations") }
+    }
+
+    private fun setupLists() {
+        // Users list
+        val learners = repo.getAllUsers().filter { !it.isVolunteer }
+        userAdapter = AdminUserAdapter(learners.toMutableList()) { user, status ->
+            repo.updateUserStatus(user.id, status)
+            val msg = if (status == UserStatus.APPROVED) "✅ ${user.fullName} approved!" 
+                      else "❌ ${user.fullName} rejected."
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+            setupLists() // refresh
+            setupOverviewCards()
+        }
+        binding.rvUsers.apply {
+            layoutManager = LinearLayoutManager(this@AdminDashboardActivity)
+            adapter = userAdapter
+        }
+
+        // Volunteers list
+        val volunteers = repo.getAllUsers().filter { it.isVolunteer }
+        volunteerAdapter = AdminVolunteerAdapter(volunteers) { volunteer, status ->
+            repo.updateUserStatus(volunteer.id, status)
+            val msg = if (status == UserStatus.APPROVED) "✅ ${volunteer.fullName} approved!" 
+                      else "❌ ${volunteer.fullName} rejected."
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+            setupLists() // refresh
+            setupOverviewCards()
+        }
+        binding.rvVolunteers.apply {
+            layoutManager = LinearLayoutManager(this@AdminDashboardActivity)
+            adapter = volunteerAdapter
+        }
+
+        // Donations list
+        lifecycleScope.launch {
+            try {
+                val sharedDb = com.happyminds.app.data.local.UserDatabase.getInstance(this@AdminDashboardActivity, "shared")
+                val donations = sharedDb.donationDao().getAllDonations()
+                val adapter = AdminDonationAdapter(donations)
+                binding.rvDonations.apply {
+                    layoutManager = LinearLayoutManager(this@AdminDashboardActivity)
+                    this.adapter = adapter
+                }
+            } catch (_: Exception) {}
         }
     }
 
-    private fun updateUIState() {
-        when (currentSection) {
-            Section.OVERVIEW -> {
-                binding.layoutDashboardOverview.visibility = View.VISIBLE
-                binding.layoutDetailView.visibility = View.GONE
-                binding.tvDashboardTitle.text = "Admin Portal"
-                binding.tvUserCount.visibility = View.GONE
-            }
-            Section.USERS -> {
-                binding.layoutDashboardOverview.visibility = View.GONE
-                binding.layoutDetailView.visibility = View.VISIBLE
-                binding.layoutUserSubFilters.visibility = View.VISIBLE
-                binding.tvUserCount.visibility = View.VISIBLE
-                binding.tvDashboardTitle.text = if (currentUserFilter == UserFilter.PENDING) "Pending Users" else "Approved Users"
-                updateUserList()
-                updateSubFilterChips()
-            }
-            Section.DONATIONS -> {
-                binding.layoutDashboardOverview.visibility = View.GONE
-                binding.layoutDetailView.visibility = View.VISIBLE
-                binding.layoutUserSubFilters.visibility = View.GONE
-                binding.tvUserCount.visibility = View.VISIBLE
-                binding.tvDashboardTitle.text = "Donations"
-                updateDonationList()
-            }
-            Section.VOLUNTEERS -> {
-                binding.layoutDashboardOverview.visibility = View.GONE
-                binding.layoutDetailView.visibility = View.VISIBLE
-                binding.layoutUserSubFilters.visibility = View.GONE
-                binding.tvUserCount.visibility = View.VISIBLE
-                binding.tvDashboardTitle.text = "Volunteers"
-                updateVolunteerList()
-            }
-        }
+    private fun setupFilters() {
+        binding.chipUsers.setOnClickListener { showSection("users") }
+        binding.chipVolunteers.setOnClickListener { showSection("volunteers") }
+        binding.chipDonations.setOnClickListener { showSection("donations") }
     }
 
-    private fun updateSubFilterChips() {
-        if (currentUserFilter == UserFilter.PENDING) {
-            binding.chipPending.setBackgroundResource(R.drawable.bg_chip_selected)
-            binding.chipPending.setTextColor(ContextCompat.getColor(this, R.color.text_white))
-            binding.chipApproved.setBackgroundResource(R.drawable.bg_chip_unselected)
-            binding.chipApproved.setTextColor(ContextCompat.getColor(this, R.color.text_dark))
+    private fun showSection(section: String) {
+        binding.layoutDashboardOverview.visibility = View.GONE
+        binding.layoutDetailView.visibility = View.VISIBLE
+        
+        binding.rvUsers.visibility = if (section == "users") View.VISIBLE else View.GONE
+        binding.rvVolunteers.visibility = if (section == "volunteers") View.VISIBLE else View.GONE
+        binding.rvDonations.visibility = if (section == "donations") View.VISIBLE else View.GONE
+        
+        updateChips(section)
+    }
+
+    private fun updateChips(selected: String) {
+        val activeBg = R.drawable.bg_chip_selected
+        val inactiveBg = R.drawable.bg_chip_unselected
+        val activeText = ContextCompat.getColor(this, R.color.text_white)
+        val inactiveText = ContextCompat.getColor(this, R.color.text_dark)
+
+        fun setChipState(view: TextView, isActive: Boolean) {
+            view.setBackgroundResource(if (isActive) activeBg else inactiveBg)
+            view.setTextColor(if (isActive) activeText else inactiveText)
+        }
+
+        setChipState(binding.chipUsers, selected == "users")
+        setChipState(binding.chipVolunteers, selected == "volunteers")
+        setChipState(binding.chipDonations, selected == "donations")
+    }
+
+    override fun onBackPressed() {
+        if (binding.layoutDetailView.visibility == View.VISIBLE) {
+            binding.layoutDetailView.visibility = View.GONE
+            binding.layoutDashboardOverview.visibility = View.VISIBLE
         } else {
-            binding.chipPending.setBackgroundResource(R.drawable.bg_chip_unselected)
-            binding.chipPending.setTextColor(ContextCompat.getColor(this, R.color.text_dark))
-            binding.chipApproved.setBackgroundResource(R.drawable.bg_chip_selected)
-            binding.chipApproved.setTextColor(ContextCompat.getColor(this, R.color.text_white))
-        }
-    }
-
-    private fun updateUserList() {
-        binding.rvUsers.adapter = userAdapter
-        val allUsers = UserManager.getUsers().filter { !it.isVolunteer }
-        val filteredUsers = when (currentUserFilter) {
-            UserFilter.PENDING -> allUsers.filter { it.status == UserStatus.PENDING }
-            UserFilter.APPROVED -> allUsers.filter { it.status == UserStatus.APPROVED }
-        }
-        userAdapter.updateList(filteredUsers)
-        binding.tvUserCount.text = "${filteredUsers.size} Users"
-    }
-
-    private fun updateVolunteerList() {
-        binding.rvUsers.adapter = volunteerAdapter
-        val allVolunteers = UserManager.getUsers().filter { it.isVolunteer }
-        volunteerAdapter.updateList(allVolunteers)
-        binding.tvUserCount.text = "${allVolunteers.size} Volunteers"
-    }
-
-    private fun updateDonationList() {
-        binding.rvUsers.adapter = donationAdapter
-        lifecycleScope.launch {
-            val allDonations = mutableListOf<com.happyminds.app.data.local.Donation>()
-            UserManager.getUsers().forEach { user ->
-                val userDb = UserDatabase.getInstance(applicationContext, user.id)
-                allDonations.addAll(userDb.donationDao().getAllDonations())
-            }
-            val sortedList = allDonations.sortedByDescending { it.timestamp }
-            donationAdapter.updateList(sortedList)
-            binding.tvUserCount.text = "${sortedList.size} Donations"
+            super.onBackPressed()
         }
     }
 }

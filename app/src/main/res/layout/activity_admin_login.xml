@@ -67,12 +67,12 @@
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/etAdminId"
+                    android:id="@+id/etAdminEmail"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/card_background"
-                    android:inputType="text"
+                    android:inputType="textEmailAddress"
                     android:paddingHorizontal="16dp"
                     android:textColor="@color/text_dark"
                     android:textSize="15sp" />
@@ -86,16 +86,24 @@
                     android:textStyle="bold"
                     android:layout_marginTop="20dp" />
 
-                <EditText
-                    android:id="@+id/etAccessKey"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="52dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/card_background"
-                    android:inputType="textPassword"
-                    android:paddingHorizontal="16dp"
-                    android:textColor="@color/text_dark"
-                    android:textSize="15sp" />
+                    app:hintEnabled="false"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="@color/teal_primary">
+
+                    <EditText
+                        android:id="@+id/etAdminPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:background="@drawable/card_background"
+                        android:inputType="textPassword"
+                        android:paddingHorizontal="16dp"
+                        android:textColor="@color/text_dark"
+                        android:textSize="15sp" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
                     android:id="@+id/btnAdminLogin"
@@ -112,7 +120,7 @@
         </androidx.cardview.widget.CardView>
 
         <TextView
-            android:id="@+id/btnBackToUserLogin"
+            android:id="@+id/btnBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

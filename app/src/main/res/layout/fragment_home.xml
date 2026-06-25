@@ -31,20 +31,21 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
+                    android:id="@+id/tvWelcome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/welcome_back"
-                    android:textColor="#CCFFFFFF"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/tvUserName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Thato!"
+                    android:text="Welcome back,"
                     android:textColor="@color/text_white"
                     android:textSize="26sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvGrade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Grade 4"
+                    android:textColor="#CCFFFFFF"
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <ImageButton
@@ -78,22 +79,11 @@
                     android:textColor="#CCFFFFFF"
                     android:textSize="13sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/tvStreakDays"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/tvStreakDays"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="7 days"
-                    android:textColor="@color/text_white"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ProgressBar
-                    android:id="@+id/streakProgress"
+                    android:id="@+id/progressRing"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="0dp"
                     android:layout_height="10dp"
@@ -104,113 +94,33 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 
+                <TextView
+                    android:id="@+id/tvLessonsDone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="0/0 done"
+                    android:textColor="#CCFFFFFF"
+                    android:textSize="12sp"
+                    app:layout_constraintTop_toBottomOf="@id/progressRing"
+                    app:layout_constraintStart_toStartOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Quick actions row -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="24dp"
-            android:paddingBottom="8dp">
-
-            <LinearLayout
-                android:id="@+id/btnLessons"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="12dp">
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/bg_icon_orange"
-                    android:src="@drawable/ic_book"
-                    android:padding="12dp"
-                    android:contentDescription="Lessons" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Lessons"
-                    android:textColor="@color/text_medium"
-                    android:textSize="12sp"
-                    android:layout_marginTop="6dp" />
-            </LinearLayout>
-
-
-
-            <LinearLayout
-                android:id="@+id/btnSchedule"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="12dp">
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/bg_icon_orange"
-                    android:src="@drawable/ic_schedule"
-                    android:padding="12dp"
-                    android:contentDescription="Schedule" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Schedule"
-                    android:textColor="@color/text_medium"
-                    android:textSize="12sp"
-                    android:layout_marginTop="6dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/btnDonate"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="12dp">
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/bg_icon_orange"
-                    android:src="@drawable/ic_heart"
-                    android:padding="12dp"
-                    android:contentDescription="Donate" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Donate"
-                    android:textColor="@color/text_medium"
-                    android:textSize="12sp"
-                    android:layout_marginTop="6dp" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- Today's classes section -->
+        <!-- Continue Learning section -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="20dp"
-            android:paddingTop="8dp">
+            android:paddingTop="20dp">
 
             <TextView
-                android:id="@+id/tvClassesTitle"
+                android:id="@+id/tvContinueTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/todays_classes"
+                android:text="@string/continue_learning"
                 android:textColor="@color/text_dark"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -218,7 +128,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tvViewAll"
+                android:id="@+id/btnGoToLearn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/view_all"
@@ -226,40 +136,71 @@
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="@id/tvClassesTitle" />
+                app:layout_constraintBottom_toBottomOf="@id/tvContinueTitle" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvTodayClasses"
+            android:id="@+id/rvContinueLessons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="16dp"
             android:paddingTop="12dp"
-            android:nestedScrollingEnabled="false"
-            android:clipToPadding="false" />
-
-        <!-- Continue Learning section -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/continue_learning"
-            android:textColor="@color/text_dark"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="20dp"
-            android:paddingBottom="12dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvContinueLearning"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
             android:paddingBottom="20dp"
             android:nestedScrollingEnabled="false"
             android:clipToPadding="false"
             android:orientation="horizontal" />
+
+        <!-- Completed Lessons section -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="12dp">
+
+            <TextView
+                android:id="@+id/tvCompletedTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Completed Lessons"
+                android:textColor="@color/text_dark"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCompletedLessons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="20dp"
+            android:nestedScrollingEnabled="false"
+            android:clipToPadding="false"
+            android:orientation="horizontal" />
+
+        <!-- Community Updates section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Community Updates"
+            android:textColor="@color/text_dark"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCommunityUpdates"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="24dp"
+            android:nestedScrollingEnabled="false" />
 
     </LinearLayout>
 </ScrollView>
