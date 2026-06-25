@@ -1,4 +1,4 @@
-HappyMinds 📚
+HappyMinds 
 
 A South African primary school learning app for Grades 1–7, built for Android.
 HappyMinds gives learners access to structured curriculum notes across four core
@@ -108,11 +108,14 @@ No network calls are made — all content is hardcoded in Kotlin strings.
 
 Grades
 
-Grades 1 through 7 are supported (South African primary school).
+Grades 1 through 7 are supported.
 
-Subjects (4 only)
+Subjects 
 
-SubjectEmojiMathematics🔢English📖Natural Science🔬Life Skills🌱
+SubjectEmojiMathematics
+English
+Natural Science
+Life Skills
 
 Lessons per grade
 
