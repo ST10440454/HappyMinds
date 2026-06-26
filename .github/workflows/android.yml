@@ -20,16 +20,21 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    # Clean setup that runs directly in the root directory
-    - name: Setup Gradle & Build APK
+    # This fixes the missing file issue by downloading and configuring a fresh wrapper automatically
+    - name: Setup Gradle (Fallback wrapper generation)
       uses: gradle/actions/setup-gradle@v3
       with:
-        arguments: assembleDebug
+        gradle-version: '8.4' # Generates a stable wrapper automatically if missing
 
-    - name: Build AAB
-      uses: gradle/actions/setup-gradle@v3
-      with:
-        arguments: bundleRelease
+    # Runs the APK build step specifically targeting your inner project directory
+    - name: Build Android APK (Debug)
+      run: gradle assembleDebug
+      working-directory: ./HappyMinds
+
+    # Runs the AAB bundle step targeting your inner project directory
+    - name: Build Android App Bundle (AAB)
+      run: gradle bundleRelease
+      working-directory: ./HappyMinds
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
