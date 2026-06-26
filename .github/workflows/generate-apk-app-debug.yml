@@ -40,9 +40,6 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
-      - name: Change wrapper permissions
-        run: chmod +x ./gradlew
-
       # Run Tests Build
       - name: Run gradle tests
         run: ./gradlew test
