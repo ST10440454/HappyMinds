@@ -64,3 +64,10 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
+
+configurations.all {
+    resolutionStrategy {
+        // Forces Gradle to ignore the empty stub jar that causes the duplicate class
+        exclude(group = "com.google.guava", module = "listenablefuture")
+    }
+}
