@@ -21,30 +21,32 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    # Fixes the permission denied issue for the Gradle wrapper script
+    # Added working-directory here to point to your subfolder
     - name: Grant Execute Permission to Gradlew
+      working-directory: ./HappyMinds
       run: chmod +x ./gradlew
 
-    # Generates the Debug APK file
+    # Added working-directory here
     - name: Build Android APK (Debug)
+      working-directory: ./HappyMinds
       run: ./gradlew assembleDebug
 
-    # Generates the Release AAB file
+    # Added working-directory here
     - name: Build Android App Bundle (AAB)
+      working-directory: ./HappyMinds
       run: ./gradlew bundleRelease
 
-    # Uploads the built APK so you can download it from GitHub
+    # Updated the paths below to include your subfolder directory
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: android-debug-apk
-        path: app/build/outputs/apk/debug/app-debug.apk
+        path: HappyMinds/app/build/outputs/apk/debug/app-debug.apk
         retention-days: 7
 
-    # Uploads the built AAB so you can download it from GitHub
     - name: Upload AAB Artifact
       uses: actions/upload-artifact@v4
       with:
         name: android-release-aab
-        path: app/build/outputs/bundle/release/app-release.aab
+        path: HappyMinds/app/build/outputs/bundle/release/app-release.aab
         retention-days: 7
