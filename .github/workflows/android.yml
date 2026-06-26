@@ -20,17 +20,15 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    # Installs a global Gradle runner since the gradlew script file is missing locally
+    # Updated from 8.4 to 8.7 to satisfy your Android Gradle Plugin (8.5.0) requirements
     - name: Setup Gradle (Fallback wrapper generation)
       uses: gradle/actions/setup-gradle@v3
       with:
-        gradle-version: '8.4' 
+        gradle-version: '8.7' 
 
-    # Runs directly in the root folder
     - name: Build Android APK (Debug)
       run: gradle assembleDebug
 
-    # Runs directly in the root folder
     - name: Build Android App Bundle (AAB)
       run: gradle bundleRelease
 
