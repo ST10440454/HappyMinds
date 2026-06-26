@@ -20,16 +20,18 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    # This official action automatically locates your project and configures gradlew permissions seamlessly
+    # Tells the builder exactly which folder contains your gradle files
     - name: Setup Gradle & Build APK
       uses: gradle/actions/setup-gradle@v3
       with:
         arguments: assembleDebug
+        build-root-directory: ./HappyMinds 
 
     - name: Build AAB
       uses: gradle/actions/setup-gradle@v3
       with:
         arguments: bundleRelease
+        build-root-directory: ./HappyMinds
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
