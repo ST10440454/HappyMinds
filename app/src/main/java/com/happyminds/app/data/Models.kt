@@ -51,6 +51,7 @@ object Curriculum {
         isOrange = isOrange, subject = subject, grade = grade,
         notes = notes, description = desc
     )
+
     private fun mathsFor(g: Int) = when (g) {
         1 -> listOf(
             L("g1-m1","Counting to 20","10 min",Subject.MATHS,1,true,"Count numbers 1 to 20.","""
@@ -513,6 +514,7 @@ Q3. Isosceles triangle, top angle 40° → base angles = ___
 """)
         )
     }
+
     private fun englishFor(g: Int) = when (g) {
         1 -> listOf(
             L("g1-e1","Phonics: Alphabet Sounds","12 min",Subject.ENGLISH,1,false,"Learn the sound each letter makes.","""
@@ -1032,6 +1034,7 @@ permission to start an environmental club. Include:
 """)
         )
     }
+
     private fun scienceFor(g: Int) = when (g) {
         1 -> listOf(
             L("g1-s1","Living & Non-living Things","12 min",Subject.NATURAL_SCIENCE,1,false,"Tell the difference between living and non-living things.","""
@@ -1606,6 +1609,7 @@ Q4. Cyclist: 30km in 2 hours → speed = ___
 """)
         )
     }
+
     private fun lifeSkillsFor(g: Int) = when (g) {
         1 -> listOf(
             L("g1-l1","My Feelings","10 min",Subject.LIFE_SKILLS,1,false,"Recognise and name different emotions.","""
