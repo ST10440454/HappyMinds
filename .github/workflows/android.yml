@@ -20,13 +20,13 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    # This runs the build seamlessly without relying on missing gradlew files or global paths
+    # Added flags below to print out the hidden compilation errors
     - name: Run Gradle Build (APK & AAB)
       uses: gradle/actions/setup-gradle@v3
       with:
         gradle-version: '8.7'
         arguments: |
-          assembleDebug 
+          assembleDebug --info --stacktrace
           bundleRelease
 
     - name: Upload APK Artifact
