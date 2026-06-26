@@ -20,18 +20,16 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    # Tells the builder exactly which folder contains your gradle files
+    # Clean setup that runs directly in the root directory
     - name: Setup Gradle & Build APK
       uses: gradle/actions/setup-gradle@v3
       with:
         arguments: assembleDebug
-        build-root-directory: ./HappyMinds 
 
     - name: Build AAB
       uses: gradle/actions/setup-gradle@v3
       with:
         arguments: bundleRelease
-        build-root-directory: ./HappyMinds
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
