@@ -6,7 +6,7 @@ env:
 
   # The name of the Play Store
   playstore_name: Happy Minds
-  path: app/build/outputs/apk/debug/*.apklol
+  path: app/build/outputs/apk/debug/*.apk
 
 on:
 
@@ -39,6 +39,9 @@ jobs:
           distribution: 'zulu' # See 'Supported distributions' for available options
           java-version: '17'
           cache: 'gradle'
+
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
 
       # Run Tests Build
       - name: Run gradle tests
