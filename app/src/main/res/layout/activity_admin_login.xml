@@ -30,7 +30,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Admin Portal"
+                android:text="Admins Portal"
                 android:textColor="@color/text_dark"
                 android:textSize="28sp"
                 android:textStyle="bold"
