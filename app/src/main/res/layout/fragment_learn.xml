@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_light">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="12dp"
+        android:elevation="4dp">
+
+        <TextView
+            android:id="@+id/tvGradeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Learning Centre"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"/>
+
+        <!-- Search -->
+        <EditText
+            android:id="@+id/etSearch"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="10dp"
+            android:hint="Search lessons…"
+            android:inputType="text"
+            android:background="@drawable/bg_search_field"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:textSize="14sp"
+            android:textColor="@color/text_dark"/>
+
+        <!-- Subject chips -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView android:id="@+id/chipAll"
+                    style="@style/SubjectChipSelected"
+                    android:text="All"/>
+
+                <TextView android:id="@+id/chipMaths"
+                    style="@style/SubjectChip"
+                    android:layout_marginStart="8dp"
+                    android:text="🔢 Maths"/>
+
+                <TextView android:id="@+id/chipEnglish"
+                    style="@style/SubjectChip"
+                    android:layout_marginStart="8dp"
+                    android:text="📖 English"/>
+
+                <TextView android:id="@+id/chipScience"
+                    style="@style/SubjectChip"
+                    android:layout_marginStart="8dp"
+                    android:text="🔬 Science"/>
+
+                <TextView android:id="@+id/chipLifeSkills"
+                    style="@style/SubjectChip"
+                    android:layout_marginStart="8dp"
+                    android:text="🌱 Life Skills"/>
+            </LinearLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
+
+    <!-- Lessons list -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvLessons"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp"/>
+
+    <!-- Empty state -->
+    <TextView
+        android:id="@+id/tvEmptyState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="40dp"
+        android:text="No lessons found"
+        android:textColor="@color/text_grey"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
+</LinearLayout>

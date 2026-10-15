@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_light">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Overall card -->
+            <androidx.cardview.widget.CardView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/bg_white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Overall Progress"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_grey"
+                        android:letterSpacing="0.05"/>
+
+                    <TextView
+                        android:id="@+id/tvOverallPct"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0%"
+                        android:textSize="48sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/orange_primary"
+                        android:layout_marginTop="4dp"/>
+
+                    <ProgressBar
+                        android:id="@+id/progressOverall"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="14dp"
+                        android:layout_marginTop="10dp"
+                        android:max="100"
+                        android:progressDrawable="@drawable/progress_bar_orange"/>
+
+                    <TextView
+                        android:id="@+id/tvCompleted"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_medium"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- By Subject -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="By Subject"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_dark"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSubjectProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"/>
+
+            <!-- Per-lesson -->
+            <TextView
+                android:id="@+id/tvLessonsHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="Completed Lessons"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_dark"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvLessonsProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:paddingBottom="24dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

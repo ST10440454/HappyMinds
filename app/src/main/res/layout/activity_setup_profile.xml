@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="28dp">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:text="Set Up Child Profile"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp"
+            android:text="We'll personalise the learning centre for your child"
+            android:textSize="14sp"
+            android:textColor="@color/text_grey"
+            android:gravity="center"/>
+
+        <!-- Child Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="Child's Name"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"/>
+
+        <EditText
+            android:id="@+id/etChildName"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="6dp"
+            android:hint="e.g. Lebo"
+            android:inputType="textPersonName"
+            android:background="@drawable/bg_input_field"
+            android:paddingHorizontal="14dp"
+            android:textSize="15sp"
+            android:textColor="@color/text_dark"/>
+
+        <!-- Age -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Age"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"/>
+
+        <EditText
+            android:id="@+id/etAge"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="6dp"
+            android:hint="e.g. 9"
+            android:inputType="number"
+            android:background="@drawable/bg_input_field"
+            android:paddingHorizontal="14dp"
+            android:textSize="15sp"
+            android:textColor="@color/text_dark"/>
+
+        <!-- Grade -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Grade (1 – 7)"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"/>
+
+        <Spinner
+            android:id="@+id/spinnerGrade"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/bg_input_field"
+            android:paddingHorizontal="10dp"/>
+
+        <Button
+            android:id="@+id/btnSaveProfile"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="32dp"
+            android:text="Save Profile &amp; Start Learning 🚀"
+            android:textSize="16sp"
+            android:backgroundTint="@color/orange_primary"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_cream">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_orange_gradient"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="52dp"
+        android:paddingBottom="24dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_chevron_right"
+            android:rotation="180"
+            android:contentDescription="Back"
+            android:layout_marginEnd="12dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Notifications"
+            android:textColor="@color/text_white"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btnMarkAllRead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mark all read"
+            android:textColor="@color/text_white"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="24dp">
+
+            <!-- Today section -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Today"
+                android:textSize="14sp" android:textStyle="bold"
+                android:textColor="@color/text_light" android:layout_marginBottom="12dp"/>
+
+            <!-- Notification 1 - unread -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                app:cardCornerRadius="14dp" app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/bg_light_orange" android:layout_marginBottom="10dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:gravity="center_vertical" android:padding="14dp">
+                    <TextView android:layout_width="42dp" android:layout_height="42dp"
+                        android:text="🎉" android:textSize="22sp" android:gravity="center"
+                        android:background="@drawable/card_background" android:layout_marginEnd="12dp"/>
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="New badge earned!" android:textSize="14sp" android:textStyle="bold"
+                            android:textColor="@color/text_dark"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="You unlocked the &quot;Star Learner&quot; badge" android:textSize="13sp"
+                            android:textColor="@color/text_medium" android:paddingTop="2dp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="2 hours ago" android:textSize="11sp"
+                            android:textColor="@color/text_light" android:paddingTop="4dp"/>
+                    </LinearLayout>
+                    <View android:layout_width="8dp" android:layout_height="8dp"
+                        android:background="@drawable/bg_button_orange"
+                        android:layout_marginStart="8dp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Notification 2 - unread -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                app:cardCornerRadius="14dp" app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/bg_light_teal" android:layout_marginBottom="10dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:gravity="center_vertical" android:padding="14dp">
+                    <TextView android:layout_width="42dp" android:layout_height="42dp"
+                        android:text="📅" android:textSize="22sp" android:gravity="center"
+                        android:background="@drawable/card_background" android:layout_marginEnd="12dp"/>
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Class starting soon" android:textSize="14sp" android:textStyle="bold"
+                            android:textColor="@color/text_dark"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Mathematics starts in 15 minutes" android:textSize="13sp"
+                            android:textColor="@color/text_medium" android:paddingTop="2dp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="30 min ago" android:textSize="11sp"
+                            android:textColor="@color/text_light" android:paddingTop="4dp"/>
+                    </LinearLayout>
+                    <View android:layout_width="8dp" android:layout_height="8dp"
+                        android:background="@drawable/bg_button_orange"
+                        android:layout_marginStart="8dp"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Yesterday section -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Yesterday"
+                android:textSize="14sp" android:textStyle="bold"
+                android:textColor="@color/text_light"
+                android:layout_marginTop="12dp" android:layout_marginBottom="12dp"/>
+
+            <!-- Notification 3 - read -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                app:cardCornerRadius="14dp" app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/bg_white" android:layout_marginBottom="10dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:gravity="center_vertical" android:padding="14dp">
+                    <TextView android:layout_width="42dp" android:layout_height="42dp"
+                        android:text="✅" android:textSize="22sp" android:gravity="center"
+                        android:background="@drawable/card_background" android:layout_marginEnd="12dp"/>
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Lesson completed" android:textSize="14sp" android:textStyle="bold"
+                            android:textColor="@color/text_dark"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="You finished English Reading chapter 3" android:textSize="13sp"
+                            android:textColor="@color/text_medium" android:paddingTop="2dp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Yesterday, 4:30 PM" android:textSize="11sp"
+                            android:textColor="@color/text_light" android:paddingTop="4dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Notification 4 - read -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                app:cardCornerRadius="14dp" app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/bg_white" android:layout_marginBottom="10dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:gravity="center_vertical" android:padding="14dp">
+                    <TextView android:layout_width="42dp" android:layout_height="42dp"
+                        android:text="🔥" android:textSize="22sp" android:gravity="center"
+                        android:background="@drawable/card_background" android:layout_marginEnd="12dp"/>
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Streak reminder" android:textSize="14sp" android:textStyle="bold"
+                            android:textColor="@color/text_dark"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Keep your 7-day streak going! Learn today" android:textSize="13sp"
+                            android:textColor="@color/text_medium" android:paddingTop="2dp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Yesterday, 8:00 AM" android:textSize="11sp"
+                            android:textColor="@color/text_light" android:paddingTop="4dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

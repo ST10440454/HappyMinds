@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_cream">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/community"
+            android:textColor="@color/text_dark"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="56dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/connect_classmates"
+            android:textColor="@color/text_light"
+            android:textSize="14sp"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="20dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Upcoming Events -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/upcoming_events"
+            android:textColor="@color/text_dark"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingHorizontal="20dp"
+            android:paddingBottom="12dp" />
+
+        <!-- Family Day event card -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_event_card_orange"
+            android:padding="16dp"
+            android:paddingStart="20dp">
+
+            <ImageView
+                android:id="@+id/ivEvent1Icon"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_icon_orange"
+                android:src="@drawable/ic_calendar"
+                android:padding="10dp"
+                android:contentDescription="Event"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvEvent1Name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Family Day Celebration"
+                android:textColor="@color/text_dark"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginStart="12dp"
+                app:layout_constraintStart_toEndOf="@id/ivEvent1Icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvEvent1Date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Saturday, June 27 · 10:00 AM"
+                android:textColor="@color/text_dark"
+                android:textSize="13sp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="2dp"
+                app:layout_constraintStart_toEndOf="@id/ivEvent1Icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvEvent1Name" />
+
+            <TextView
+                android:id="@+id/tvRsvp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rsvp"
+                android:textColor="@color/orange_primary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="@id/tvEvent1Name"
+                app:layout_constraintTop_toBottomOf="@id/tvEvent1Date" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Book Donation event card -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/bg_event_card_teal"
+            android:padding="16dp"
+            android:paddingStart="20dp">
+
+            <ImageView
+                android:id="@+id/ivEvent2Icon"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_icon_teal"
+                android:src="@drawable/ic_gift"
+                android:padding="10dp"
+                android:contentDescription="Event"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvEvent2Name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Book Donation Drive"
+                android:textColor="@color/text_dark"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginStart="12dp"
+                app:layout_constraintStart_toEndOf="@id/ivEvent2Icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvEvent2Date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="June 22–26 · All Locations"
+                android:textColor="@color/text_dark"
+                android:textSize="13sp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="2dp"
+                app:layout_constraintStart_toEndOf="@id/ivEvent2Icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvEvent2Name" />
+
+            <TextView
+                android:id="@+id/tvLearnMore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/learn_more"
+                android:textColor="@color/teal_primary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="@id/tvEvent2Name"
+                app:layout_constraintTop_toBottomOf="@id/tvEvent2Date" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Community Updates -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/community_updates"
+            android:textColor="@color/text_dark"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingHorizontal="20dp"
+            android:paddingBottom="12dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCommunityUpdates"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:nestedScrollingEnabled="false"
+            android:clipToPadding="false" />
+
+    </LinearLayout>
+</ScrollView>
