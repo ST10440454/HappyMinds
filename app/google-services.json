@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "801233777781",
+    "project_id": "happymind-fc3b4",
+    "storage_bucket": "happymind-fc3b4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:801233777781:android:905e47aea7a6ee7cc8343c",
+        "android_client_info": {
+          "package_name": "com.happyminds.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeLYpWVB1iigNZ4nedtp1yWjOheWIN6kI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

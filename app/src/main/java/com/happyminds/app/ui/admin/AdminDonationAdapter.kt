@@ -3,7 +3,7 @@ package com.happyminds.app.ui.admin
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.happyminds.app.data.local.Donation
+import com.happyminds.app.data.Donation
 import com.happyminds.app.databinding.ItemAdminDonationBinding
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -20,7 +20,7 @@ class AdminDonationAdapter(
             b.tvDonationDate.text = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
                 .format(Date(d.timestamp))
             // mask card number for display
-            b.tvMessage?.text = "Card: **** **** **** ${d.cardNumber.takeLast(4)}"
+            b.tvMessage?.text = "Card: **** **** **** ${d.cardLast4}"
         }
     }
 

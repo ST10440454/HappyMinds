@@ -1,8 +1,11 @@
 package com.happyminds.app.ui.admin
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.happyminds.app.R
 import com.happyminds.app.data.User
 import com.happyminds.app.data.UserStatus
 import com.happyminds.app.databinding.ItemAdminUserBinding
@@ -19,6 +22,32 @@ class AdminUserAdapter(
             b.tvUserStatus.text = user.status.name
             b.tvChildInfo.text = if (user.childName.isNotEmpty())
                 "${user.childName} · Age ${user.age} · Grade ${user.grade}" else "Profile not set"
+
+            b.tvUserAvatar.text = user.fullName.split(" ")
+                .mapNotNull { it.firstOrNull()?.uppercaseChar() }
+                .joinToString("")
+
+            when (user.status) {
+                UserStatus.PENDING -> {
+                    b.tvUserStatus.setTextColor(ContextCompat.getColor(itemView.context, R.color.orange_primary))
+                    b.tvUserStatus.setBackgroundResource(R.drawable.bg_light_orange)
+                    b.layoutActions.visibility = View.VISIBLE
+                }
+                UserStatus.APPROVED -> {
+                    b.tvUserStatus.setTextColor(ContextCompat.getColor(itemView.context, R.color.teal_primary))
+                    b.tvUserStatus.setBackgroundResource(R.drawable.bg_light_teal)
+                    b.layoutActions.visibility = View.GONE
+                }
+                UserStatus.REJECTED -> {
+                    b.tvUserStatus.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_medium))
+                    b.tvUserStatus.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.divider))
+                    b.layoutActions.visibility = View.GONE
+                }
+            }
+
+            b.root.setOnClickListener {
+                b.layoutActions.visibility = if (b.layoutActions.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+            }
 
             b.btnApprove.setOnClickListener { onStatusChange(user, UserStatus.APPROVED) }
             b.btnReject.setOnClickListener  { onStatusChange(user, UserStatus.REJECTED)  }

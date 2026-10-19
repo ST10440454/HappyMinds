@@ -10,14 +10,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.happyminds.app.R
+import com.happyminds.app.data.CommunityUpdate
 import com.happyminds.app.data.Curriculum
 import com.happyminds.app.data.UserRepository
 import com.happyminds.app.data.UserSession
 import com.happyminds.app.databinding.FragmentHomeBinding
+import com.happyminds.app.ui.community.CommunityUpdateAdapter
 import com.happyminds.app.ui.learn.LessonAdapter
 import com.happyminds.app.ui.learn.LessonPlayerActivity
-import com.happyminds.app.ui.community.CommunityUpdateAdapter
-import com.happyminds.app.data.CommunityUpdate
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
@@ -33,7 +33,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        repo = UserRepository(requireContext())
+        repo = UserRepository()
 
         val user  = UserSession.currentUser
         val child = user?.childName?.ifEmpty { user.fullName } ?: "Learner"

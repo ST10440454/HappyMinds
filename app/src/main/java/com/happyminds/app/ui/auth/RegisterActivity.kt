@@ -1,12 +1,13 @@
 package com.happyminds.app.ui.auth
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.happyminds.app.data.UserRepository
 import com.happyminds.app.databinding.ActivityRegisterBinding
+import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -17,7 +18,7 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        repo = UserRepository(this)
+        repo = UserRepository()
 
         binding.btnRegister.setOnClickListener {
             val fullName = binding.etFullName.text.toString().trim()
@@ -36,19 +37,21 @@ class RegisterActivity : AppCompatActivity() {
             binding.btnRegister.isEnabled = false
             binding.progressBar?.visibility = View.VISIBLE
 
-            val result = repo.register(fullName, email, password)
-            binding.btnRegister.isEnabled = true
-            binding.progressBar?.visibility = View.GONE
+            lifecycleScope.launch {
+                val result = repo.register(fullName, email, password)
+                binding.btnRegister.isEnabled = true
+                binding.progressBar?.visibility = View.GONE
 
-            result.onSuccess {
-                Toast.makeText(
-                    this,
-                    "Registration sent! Please wait for admin approval. 🎉",
-                    Toast.LENGTH_LONG
-                ).show()
-                finish()
-            }.onFailure {
-                Toast.makeText(this, it.message ?: "Registration failed", Toast.LENGTH_LONG).show()
+                result.onSuccess {
+                    Toast.makeText(
+                        this@RegisterActivity,
+                        "Registration sent! Please wait for admin approval. 🎉",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    finish()
+                }.onFailure {
+                    Toast.makeText(this@RegisterActivity, it.message ?: "Registration failed", Toast.LENGTH_LONG).show()
+                }
             }
         }
 

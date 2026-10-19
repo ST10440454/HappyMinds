@@ -1,6 +1,7 @@
 package com.happyminds.app.data
 
 import androidx.annotation.DrawableRes
+import com.google.firebase.firestore.DocumentSnapshot
 
 data class ClassItem(val name: String, val timeRange: String, @DrawableRes val iconRes: Int, val isOrange: Boolean = true)
 data class LessonItem(
@@ -25,6 +26,36 @@ data class User(
     val skills: String = "", val createdAt: Long = System.currentTimeMillis()
 )
 enum class UserStatus { PENDING, APPROVED, REJECTED }
+
+fun User.toMap(): Map<String, Any> = mapOf(
+    "id" to id,
+    "fullName" to fullName,
+    "email" to email,
+    "passwordHash" to passwordHash,
+    "childName" to childName,
+    "age" to age,
+    "grade" to grade,
+    "status" to status.name,
+    "isVolunteer" to isVolunteer,
+    "helpType" to helpType,
+    "skills" to skills,
+    "createdAt" to createdAt
+)
+
+fun DocumentSnapshot.toUser(): User? {
+    return try {
+        val user = toObject(User::class.java) ?: return null
+        val statusString = getString("status")
+        val parsedStatus = try {
+            if (statusString != null) UserStatus.valueOf(statusString) else user.status
+        } catch (e: Exception) {
+            user.status
+        }
+        user.copy(id = id, status = parsedStatus)
+    } catch (e: Exception) {
+        null
+    }
+}
 
 object UserSession {
     var currentUser: User? = null

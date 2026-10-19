@@ -138,7 +138,8 @@
                         android:layout_height="48dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/bg_spinner"
-                        android:textColor="@color/text_dark"
+                        android:entries="@array/donation_frequencies"
+                        android:textColor="@color/text_medium"
                         android:paddingHorizontal="8dp" />
 
                     <!-- Full name -->

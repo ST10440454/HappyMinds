@@ -1,7 +1,6 @@
 package com.happyminds.app.ui.learn
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -29,7 +28,7 @@ class LessonPlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLessonPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        repo = UserRepository(this)
+        repo = UserRepository()
 
         lessonId          = intent.getStringExtra(EXTRA_LESSON_ID)   ?: ""
         val name          = intent.getStringExtra(EXTRA_LESSON_NAME) ?: ""

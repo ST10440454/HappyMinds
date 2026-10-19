@@ -4,11 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.happyminds.app.MainActivity
 import com.happyminds.app.data.UserRepository
-import com.happyminds.app.data.UserSession
 import com.happyminds.app.databinding.ActivityLoginBinding
-import com.happyminds.app.ui.admin.AdminDashboardActivity
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
@@ -19,10 +19,12 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        repo = UserRepository(this)
+        repo = UserRepository()
 
         // Auto-restore saved session
-        repo.restoreSession()?.let { navigateToMain(it.childName.isEmpty()) }
+        lifecycleScope.launch {
+            repo.restoreSession()?.let { navigateToMain(it.childName.isEmpty() || it.grade.isEmpty()) }
+        }
 
         binding.btnLogin.setOnClickListener {
             val email    = binding.etEmail.text.toString().trim()
@@ -33,15 +35,19 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val result = repo.login(email, password)
-            result.onSuccess { user ->
-                Toast.makeText(this, "Welcome back! 🎉", Toast.LENGTH_SHORT).show()
-                navigateToMain(user.childName.isEmpty() || user.grade.isEmpty())
-            }.onFailure { e ->
-                when (e.message) {
-                    "PENDING"  -> Toast.makeText(this, "Your account is pending admin approval.", Toast.LENGTH_LONG).show()
-                    "REJECTED" -> Toast.makeText(this, "Your account request was declined.", Toast.LENGTH_LONG).show()
-                    else       -> Toast.makeText(this, e.message ?: "Login failed", Toast.LENGTH_LONG).show()
+            binding.btnLogin.isEnabled = false
+            lifecycleScope.launch {
+                val result = repo.login(email, password)
+                binding.btnLogin.isEnabled = true
+                result.onSuccess { user ->
+                    Toast.makeText(this@LoginActivity, "Welcome back! 🎉", Toast.LENGTH_SHORT).show()
+                    navigateToMain(user.childName.isEmpty() || user.grade.isEmpty())
+                }.onFailure { e ->
+                    when (e.message) {
+                        "PENDING"  -> Toast.makeText(this@LoginActivity, "Your account is pending admin approval.", Toast.LENGTH_LONG).show()
+                        "REJECTED" -> Toast.makeText(this@LoginActivity, "Your account request was declined.", Toast.LENGTH_LONG).show()
+                        else       -> Toast.makeText(this@LoginActivity, e.message ?: "Login failed", Toast.LENGTH_LONG).show()
+                    }
                 }
             }
         }
@@ -51,7 +57,14 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.tvForgotPassword?.setOnClickListener {
-            Toast.makeText(this, "Password reset coming soon!", Toast.LENGTH_SHORT).show()
+            val email = binding.etEmail.text.toString().trim()
+            if (email.isEmpty()) {
+                Toast.makeText(this, "Enter your email above, then tap Forgot password", Toast.LENGTH_SHORT).show()
+            } else lifecycleScope.launch {
+                repo.sendPasswordReset(email)
+                    .onSuccess { Toast.makeText(this@LoginActivity, "If an account exists, a reset email has been sent.", Toast.LENGTH_LONG).show() }
+                    .onFailure { Toast.makeText(this@LoginActivity, it.message ?: "Could not send reset email", Toast.LENGTH_LONG).show() }
+            }
         }
 
         binding.tvAdminLogin.setOnClickListener {
