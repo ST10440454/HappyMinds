@@ -59,6 +59,10 @@ class AdminVolunteerAdapter(
                 }
             }
 
+            binding.root.setOnClickListener {
+                binding.layoutActions.visibility = if (binding.layoutActions.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+            }
+
             binding.btnApprove.setOnClickListener { onAction(volunteer, UserStatus.APPROVED) }
             binding.btnReject.setOnClickListener { onAction(volunteer, UserStatus.REJECTED) }
         }

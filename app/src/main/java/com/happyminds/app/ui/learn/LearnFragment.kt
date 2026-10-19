@@ -36,7 +36,7 @@ class LearnFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        repo = UserRepository(requireContext())
+        repo = UserRepository()
         setupRecyclerView()
         loadLessons()
         setupSubjectChips()
@@ -111,7 +111,7 @@ class LearnFragment : Fragment() {
     private fun applyFilter() {
         val query = binding.etSearch.text.toString()
         var filtered = if (selectedSubject == null) allLessons
-                       else allLessons.filter { it.subject == selectedSubject }
+        else allLessons.filter { it.subject == selectedSubject }
         if (query.isNotBlank()) {
             filtered = filtered.filter { it.name.contains(query, ignoreCase = true) }
         }

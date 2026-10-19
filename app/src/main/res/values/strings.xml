@@ -42,4 +42,11 @@
     <string name="rsvp">RSVP</string>
     <string name="learn_more">Learn More</string>
     <string name="start">Start</string>
+
+    <string-array name="donation_frequencies">
+        <item>Once</item>
+        <item>Monthly</item>
+        <item>Quarterly</item>
+        <item>Annually</item>
+    </string-array>
 </resources>

@@ -27,7 +27,7 @@ class ProgressFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        repo = UserRepository(requireContext())
+        repo = UserRepository()
         loadProgress()
     }
 
@@ -54,7 +54,7 @@ class ProgressFragment : Fragment() {
             val subjectRows = Subject.entries.map { subject ->
                 val subjectLessons = allLessons.filter { it.subject == subject }
                 val subjectPct     = if (subjectLessons.isEmpty()) 0
-                    else subjectLessons.sumOf { progressMap[it.id] ?: 0 } / subjectLessons.size
+                else subjectLessons.sumOf { progressMap[it.id] ?: 0 } / subjectLessons.size
                 val done           = subjectLessons.count { (progressMap[it.id] ?: 0) >= 100 }
                 SubjectProgressRow(
                     subject    = subject,

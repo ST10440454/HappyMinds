@@ -14,7 +14,6 @@ import com.happyminds.app.data.UserRepository
 import com.happyminds.app.data.UserSession
 import com.happyminds.app.databinding.FragmentProfileBinding
 import com.happyminds.app.ui.auth.LoginActivity
-import com.happyminds.app.ui.auth.SetupProfileActivity
 import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
@@ -30,7 +29,7 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        repo = UserRepository(requireContext())
+        repo = UserRepository()
         populateProfile()
 
         // Navigation listeners
@@ -56,6 +55,10 @@ class ProfileFragment : Fragment() {
 
         binding.cardContactUs?.setOnClickListener {
             findNavController().navigate(R.id.action_profile_to_contactUs)
+        }
+
+        binding.tvSettings?.setOnClickListener {
+            findNavController().navigate(R.id.action_profile_to_settings)
         }
 
         // Sign out

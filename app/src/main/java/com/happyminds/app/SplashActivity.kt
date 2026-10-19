@@ -2,11 +2,12 @@ package com.happyminds.app
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.happyminds.app.data.UserRepository
 import com.happyminds.app.ui.auth.LoginActivity
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SplashActivity : AppCompatActivity() {
 
@@ -14,19 +15,19 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            val repo = UserRepository(this)
-            val user = repo.restoreSession()
+        lifecycleScope.launch {
+            delay(1500)
+            val user = UserRepository().restoreSession()
 
             val intent = when {
-                user == null                              -> Intent(this, LoginActivity::class.java)
+                user == null                              -> Intent(this@SplashActivity, LoginActivity::class.java)
                 user.childName.isEmpty() || user.grade.isEmpty() ->
-                    Intent(this, com.happyminds.app.ui.auth.SetupProfileActivity::class.java)
-                else                                      -> Intent(this, MainActivity::class.java)
+                    Intent(this@SplashActivity, com.happyminds.app.ui.auth.SetupProfileActivity::class.java)
+                else                                      -> Intent(this@SplashActivity, MainActivity::class.java)
             }
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()
-        }, 1500)
+        }
     }
 }

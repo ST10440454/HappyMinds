@@ -44,6 +44,8 @@
             app:destination="@id/supportFragment" />
         <action android:id="@+id/action_profile_to_contactUs"
             app:destination="@id/contactUsFragment" />
+        <action android:id="@+id/action_profile_to_settings"
+            app:destination="@id/settingsFragment" />
     </fragment>
 
     <fragment
@@ -70,6 +72,11 @@
         android:id="@+id/supportFragment"
         android:name="com.happyminds.app.ui.profile.SupportFragment"
         android:label="Support" />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.happyminds.app.ui.profile.SettingsFragment"
+        android:label="Settings" />
 
     <fragment
         android:id="@+id/contactUsFragment"

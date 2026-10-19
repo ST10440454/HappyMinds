@@ -1,6 +1,8 @@
 package com.happyminds.app.data
 
 import androidx.annotation.DrawableRes
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.PropertyName
 
 data class ClassItem(val name: String, val timeRange: String, @DrawableRes val iconRes: Int, val isOrange: Boolean = true)
 data class LessonItem(
@@ -21,10 +23,47 @@ data class User(
     val id: String = "", val fullName: String = "", val email: String = "",
     val passwordHash: String = "", val childName: String = "", val age: String = "",
     val grade: String = "", val status: UserStatus = UserStatus.PENDING,
-    val isVolunteer: Boolean = false, val helpType: String = "",
+    @get:PropertyName("isVolunteer") @field:PropertyName("isVolunteer")
+    val isVolunteer: Boolean = false,
+    val helpType: String = "",
     val skills: String = "", val createdAt: Long = System.currentTimeMillis()
 )
 enum class UserStatus { PENDING, APPROVED, REJECTED }
+
+fun User.toMap(): Map<String, Any> = mapOf(
+    "id" to id,
+    "fullName" to fullName,
+    "email" to email,
+    "passwordHash" to passwordHash,
+    "childName" to childName,
+    "age" to age,
+    "grade" to grade,
+    "status" to status.name,
+    "isVolunteer" to isVolunteer,
+    "helpType" to helpType,
+    "skills" to skills,
+    "createdAt" to createdAt
+)
+
+fun DocumentSnapshot.toUser(): User? {
+    return try {
+        val user = toObject(User::class.java) ?: return null
+        val statusString = getString("status")
+        val parsedStatus = try {
+            if (statusString != null) UserStatus.valueOf(statusString) else user.status
+        } catch (e: Exception) {
+            user.status
+        }
+        val isVol = getBoolean("isVolunteer")
+            ?: getBoolean("volunteer")
+            ?: (getString("isVolunteer")?.toBoolean()
+            ?: (getString("volunteer")?.toBoolean()
+            ?: (user.isVolunteer || user.helpType.isNotBlank())))
+        user.copy(id = id, status = parsedStatus, isVolunteer = isVol)
+    } catch (e: Exception) {
+        null
+    }
+}
 
 object UserSession {
     var currentUser: User? = null

@@ -9,6 +9,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.happyminds.app.R
+import com.happyminds.app.data.DonationRepository
+import com.happyminds.app.data.User
 import com.happyminds.app.data.UserRepository
 import com.happyminds.app.data.UserStatus
 import com.happyminds.app.databinding.ActivityAdminDashboardBinding
@@ -18,87 +20,86 @@ class AdminDashboardActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAdminDashboardBinding
     private lateinit var repo: UserRepository
-    private lateinit var userAdapter: AdminUserAdapter
-    private lateinit var volunteerAdapter: AdminVolunteerAdapter
+    private val donationRepo = DonationRepository()
+    private var learnersList = listOf<User>()
+    private var volunteersList = listOf<User>()
+    private var currentSection = "users"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAdminDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        repo = UserRepository(this)
+        repo = UserRepository()
 
-        setupOverviewCards()
-        setupLists()
-        setupFilters()
+        // The dashboard needs a signed-in admin (Firestore rules enforce this server-side too).
+        if (!repo.isSignedIn()) { finish(); return }
 
-        binding.btnBack?.setOnClickListener { finish() }
-    }
-
-    private fun setupOverviewCards() {
-        val allUsers = repo.getAllUsers()
-        val learners = allUsers.filter { !it.isVolunteer }
-        val volunteers = allUsers.filter { it.isVolunteer }
-        
-        binding.tvTotalUsersCount.text = learners.size.toString()
-        binding.tvVolunteersCount.text = volunteers.size.toString()
-        
-        // Setup donations total
-        lifecycleScope.launch {
-            try {
-                val sharedDb = com.happyminds.app.data.local.UserDatabase.getInstance(this@AdminDashboardActivity, "shared")
-                val donations = sharedDb.donationDao().getAllDonations()
-                val total = donations.sumOf { it.amount.toDoubleOrNull() ?: 0.0 }
-                binding.tvDonationsAmount.text = "R ${String.format("%.2f", total)}"
-            } catch (_: Exception) {}
-        }
+        binding.rvUsers.layoutManager = LinearLayoutManager(this)
+        binding.rvVolunteers.layoutManager = LinearLayoutManager(this)
+        binding.rvDonations.layoutManager = LinearLayoutManager(this)
 
         binding.cardTotalUsers.setOnClickListener { showSection("users") }
         binding.cardVolunteersOverview.setOnClickListener { showSection("volunteers") }
         binding.cardDonationsOverview.setOnClickListener { showSection("donations") }
+        setupFilters()
+
+        binding.btnBack?.setOnClickListener { finish() }
+
+        refresh()
     }
 
-    private fun setupLists() {
-        // Users list
-        val learners = repo.getAllUsers().filter { !it.isVolunteer }
-        userAdapter = AdminUserAdapter(learners.toMutableList()) { user, status ->
-            repo.updateUserStatus(user.id, status)
-            val msg = if (status == UserStatus.APPROVED) "✅ ${user.fullName} approved!" 
-                      else "❌ ${user.fullName} rejected."
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-            setupLists() // refresh
-            setupOverviewCards()
-        }
-        binding.rvUsers.apply {
-            layoutManager = LinearLayoutManager(this@AdminDashboardActivity)
-            adapter = userAdapter
-        }
-
-        // Volunteers list
-        val volunteers = repo.getAllUsers().filter { it.isVolunteer }
-        volunteerAdapter = AdminVolunteerAdapter(volunteers) { volunteer, status ->
-            repo.updateUserStatus(volunteer.id, status)
-            val msg = if (status == UserStatus.APPROVED) "✅ ${volunteer.fullName} approved!" 
-                      else "❌ ${volunteer.fullName} rejected."
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-            setupLists() // refresh
-            setupOverviewCards()
-        }
-        binding.rvVolunteers.apply {
-            layoutManager = LinearLayoutManager(this@AdminDashboardActivity)
-            adapter = volunteerAdapter
-        }
-
-        // Donations list
+    /** Loads users and donations from Firestore and redraws the whole dashboard. */
+    private fun refresh() {
         lifecycleScope.launch {
             try {
-                val sharedDb = com.happyminds.app.data.local.UserDatabase.getInstance(this@AdminDashboardActivity, "shared")
-                val donations = sharedDb.donationDao().getAllDonations()
-                val adapter = AdminDonationAdapter(donations)
-                binding.rvDonations.apply {
-                    layoutManager = LinearLayoutManager(this@AdminDashboardActivity)
-                    this.adapter = adapter
+                val allUsers = repo.getAllUsers()
+                val donations = donationRepo.getAllDonations()
+                val learners = allUsers.filter { !it.isVolunteer }
+                val volunteers = allUsers.filter { it.isVolunteer }
+
+                learnersList = learners
+                volunteersList = volunteers
+
+                val approvedCount = learners.count { it.status == UserStatus.APPROVED }
+                binding.tvTotalUsersCount.text = learners.size.toString()
+                binding.tvVolunteersCount.text = volunteers.size.toString()
+                val total = donations.sumOf { it.amount.toDoubleOrNull() ?: 0.0 }
+                binding.tvDonationsAmount.text = "R ${String.format("%.2f", total)}"
+
+                binding.tvDonationCount.text = "${donations.size} Donations"
+
+                binding.rvUsers.adapter =
+                    AdminUserAdapter(learners.toMutableList()) { user, status -> changeStatus(user, status) }
+                binding.rvVolunteers.adapter =
+                    AdminVolunteerAdapter(volunteers) { user, status -> changeStatus(user, status) }
+                binding.rvDonations.adapter = AdminDonationAdapter(donations)
+
+                if (binding.layoutDetailView.visibility == View.VISIBLE) {
+                    showSection(currentSection)
                 }
-            } catch (_: Exception) {}
+            } catch (e: Exception) {
+                Toast.makeText(
+                    this@AdminDashboardActivity,
+                    "Couldn't load data: ${e.message}", Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    private fun changeStatus(user: User, status: UserStatus) {
+        lifecycleScope.launch {
+            try {
+                repo.updateUserStatus(user.id, status)
+                val msg = if (status == UserStatus.APPROVED) "✅ ${user.fullName} approved!"
+                else "❌ ${user.fullName} rejected."
+                Toast.makeText(this@AdminDashboardActivity, msg, Toast.LENGTH_SHORT).show()
+                refresh()
+            } catch (e: Exception) {
+                Toast.makeText(
+                    this@AdminDashboardActivity,
+                    "Update failed: ${e.message}", Toast.LENGTH_LONG
+                ).show()
+            }
         }
     }
 
@@ -109,13 +110,28 @@ class AdminDashboardActivity : AppCompatActivity() {
     }
 
     private fun showSection(section: String) {
+        currentSection = section
         binding.layoutDashboardOverview.visibility = View.GONE
         binding.layoutDetailView.visibility = View.VISIBLE
-        
+
         binding.rvUsers.visibility = if (section == "users") View.VISIBLE else View.GONE
         binding.rvVolunteers.visibility = if (section == "volunteers") View.VISIBLE else View.GONE
         binding.rvDonations.visibility = if (section == "donations") View.VISIBLE else View.GONE
-        
+
+        binding.tvDonationCount.visibility = if (section == "donations") View.VISIBLE else View.GONE
+
+        if (section == "volunteers") {
+            binding.tvUserCount.visibility = View.VISIBLE
+            val appCount = volunteersList.count { it.status == UserStatus.APPROVED }
+            binding.tvUserCount.text = "${volunteersList.size} Volunteers ($appCount Approved)"
+        } else if (section == "users") {
+            binding.tvUserCount.visibility = View.VISIBLE
+            val appCount = learnersList.count { it.status == UserStatus.APPROVED }
+            binding.tvUserCount.text = "${learnersList.size} Users ($appCount Approved)"
+        } else {
+            binding.tvUserCount.visibility = View.GONE
+        }
+
         updateChips(section)
     }
 
@@ -139,8 +155,16 @@ class AdminDashboardActivity : AppCompatActivity() {
         if (binding.layoutDetailView.visibility == View.VISIBLE) {
             binding.layoutDetailView.visibility = View.GONE
             binding.layoutDashboardOverview.visibility = View.VISIBLE
+            binding.tvUserCount.visibility = View.GONE
+            binding.tvDonationCount.visibility = View.GONE
         } else {
             super.onBackPressed()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Leaving the dashboard ends the admin's Firebase session.
+        if (isFinishing) repo.logout()
     }
 }
