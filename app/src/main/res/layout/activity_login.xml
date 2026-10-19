@@ -18,15 +18,15 @@
         <!-- Login Form -->
         <LinearLayout
             android:layout_width="361dp"
-            android:layout_height="169dp"
+            android:layout_height="255dp"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingTop="10dp"
             android:paddingBottom="10dp">
 
             <TextView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:background="@drawable/logo"
                 android:gravity="center"
                 android:textSize="64sp" />
