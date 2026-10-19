@@ -21,6 +21,9 @@ class AdminDashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAdminDashboardBinding
     private lateinit var repo: UserRepository
     private val donationRepo = DonationRepository()
+    private var learnersList = listOf<User>()
+    private var volunteersList = listOf<User>()
+    private var currentSection = "users"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,13 +57,15 @@ class AdminDashboardActivity : AppCompatActivity() {
                 val learners = allUsers.filter { !it.isVolunteer }
                 val volunteers = allUsers.filter { it.isVolunteer }
 
+                learnersList = learners
+                volunteersList = volunteers
+
                 val approvedCount = learners.count { it.status == UserStatus.APPROVED }
                 binding.tvTotalUsersCount.text = learners.size.toString()
                 binding.tvVolunteersCount.text = volunteers.size.toString()
                 val total = donations.sumOf { it.amount.toDoubleOrNull() ?: 0.0 }
                 binding.tvDonationsAmount.text = "R ${String.format("%.2f", total)}"
 
-                binding.tvUserCount.text = "${learners.size} Users ($approvedCount Approved)"
                 binding.tvDonationCount.text = "${donations.size} Donations"
 
                 binding.rvUsers.adapter =
@@ -68,6 +73,10 @@ class AdminDashboardActivity : AppCompatActivity() {
                 binding.rvVolunteers.adapter =
                     AdminVolunteerAdapter(volunteers) { user, status -> changeStatus(user, status) }
                 binding.rvDonations.adapter = AdminDonationAdapter(donations)
+
+                if (binding.layoutDetailView.visibility == View.VISIBLE) {
+                    showSection(currentSection)
+                }
             } catch (e: Exception) {
                 Toast.makeText(
                     this@AdminDashboardActivity,
@@ -101,6 +110,7 @@ class AdminDashboardActivity : AppCompatActivity() {
     }
 
     private fun showSection(section: String) {
+        currentSection = section
         binding.layoutDashboardOverview.visibility = View.GONE
         binding.layoutDetailView.visibility = View.VISIBLE
 
@@ -108,8 +118,19 @@ class AdminDashboardActivity : AppCompatActivity() {
         binding.rvVolunteers.visibility = if (section == "volunteers") View.VISIBLE else View.GONE
         binding.rvDonations.visibility = if (section == "donations") View.VISIBLE else View.GONE
 
-        binding.tvUserCount.visibility = if (section == "users") View.VISIBLE else View.GONE
         binding.tvDonationCount.visibility = if (section == "donations") View.VISIBLE else View.GONE
+
+        if (section == "volunteers") {
+            binding.tvUserCount.visibility = View.VISIBLE
+            val appCount = volunteersList.count { it.status == UserStatus.APPROVED }
+            binding.tvUserCount.text = "${volunteersList.size} Volunteers ($appCount Approved)"
+        } else if (section == "users") {
+            binding.tvUserCount.visibility = View.VISIBLE
+            val appCount = learnersList.count { it.status == UserStatus.APPROVED }
+            binding.tvUserCount.text = "${learnersList.size} Users ($appCount Approved)"
+        } else {
+            binding.tvUserCount.visibility = View.GONE
+        }
 
         updateChips(section)
     }

@@ -9,7 +9,6 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withTimeoutOrNull
@@ -183,9 +182,15 @@ class UserRepository {
 
     fun isSignedIn() = auth.currentUser != null
 
-    suspend fun getAllUsers(): List<User> =
-        users.orderBy("createdAt", Query.Direction.DESCENDING).get().await()
-            .documents.mapNotNull { it.toUser() }
+    suspend fun getAllUsers(): List<User> = try {
+        users.get().await().documents.mapNotNull { it.toUser() }
+            .sortedByDescending { it.createdAt }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        Log.w(TAG, "getAllUsers failed", e)
+        emptyList()
+    }
 
     suspend fun updateUserStatus(userId: String, status: UserStatus) {
         users.document(userId).update("status", status.name).await()
