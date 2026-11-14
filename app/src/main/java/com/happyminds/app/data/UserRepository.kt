@@ -8,11 +8,25 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withTimeoutOrNull
 
+/**
+ * UserRepository — all data lives in Firebase:
+ *
+ *   • Firebase Authentication  → email/password accounts and the persisted login session
+ *   • Cloud Firestore
+ *       users/{uid}                    profile + approval status
+ *       users/{uid}/progress/{lesson}  per-lesson progress
+ *       admins/{uid}                   (create manually) marks an Auth user as an admin
+ *
+ * Signing in is two steps: Auth verifies the password, then the Firestore profile is
+ * checked for admin approval (PENDING / REJECTED users are signed straight back out).
+ */
 class UserRepository {
 
     private val auth = FirebaseAuth.getInstance()
@@ -34,17 +48,22 @@ class UserRepository {
         helpType: String = "",
         skills: String = ""
     ): Result<User> = guard {
-        val firebaseUser = auth.createUserWithEmailAndPassword(email, password).await().user
+        val created = try {
+            auth.createUserWithEmailAndPassword(email.trim(), password).await()
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            throw Exception("Enter a valid email address.")
+        }
+        val firebaseUser = created.user
             ?: throw IllegalStateException("Account could not be created.")
 
         val newUser = User(
             id = firebaseUser.uid,
             fullName = fullName,
-            email = email.lowercase(),
+            email = email.trim().lowercase(),
             status = UserStatus.PENDING,
             isVolunteer = isVolunteer,
-            helpType = helpType,
-            skills = skills
+            helpType = helpType.trim(),
+            skills = skills.trim()
         )
         try {
             users.document(firebaseUser.uid).set(newUser.toMap()).await()
@@ -68,6 +87,32 @@ class UserRepository {
             auth.signOut()
             throw Exception("No learner profile exists for this account.")
         }
+        when (user.status) {
+            UserStatus.PENDING -> { auth.signOut(); throw Exception("PENDING") }
+            UserStatus.REJECTED -> { auth.signOut(); throw Exception("REJECTED") }
+            UserStatus.APPROVED -> { val synced = syncEmail(user); UserSession.currentUser = synced; synced }
+        }
+    }
+
+    suspend fun signInWithGoogleIdToken(idToken: String): Result<User> = guard {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        val authResult = auth.signInWithCredential(credential).await()
+        val firebaseUser = authResult.user
+            ?: throw IllegalStateException("Google sign-in failed.")
+
+        var user = users.document(firebaseUser.uid).get().await().toUser()
+        if (user == null) {
+            val newUser = User(
+                id = firebaseUser.uid,
+                fullName = firebaseUser.displayName ?: "Google User",
+                email = (firebaseUser.email ?: "").lowercase(),
+                status = UserStatus.APPROVED,
+                isVolunteer = false
+            )
+            users.document(firebaseUser.uid).set(newUser.toMap()).await()
+            user = newUser
+        }
+
         when (user.status) {
             UserStatus.PENDING -> { auth.signOut(); throw Exception("PENDING") }
             UserStatus.REJECTED -> { auth.signOut(); throw Exception("REJECTED") }
@@ -182,15 +227,10 @@ class UserRepository {
 
     fun isSignedIn() = auth.currentUser != null
 
-    suspend fun getAllUsers(): List<User> = try {
-        users.get().await().documents.mapNotNull { it.toUser() }
+    suspend fun getAllUsers(): List<User> =
+        users.get().await()
+            .documents.mapNotNull { it.toUser() }
             .sortedByDescending { it.createdAt }
-    } catch (e: CancellationException) {
-        throw e
-    } catch (e: Exception) {
-        Log.w(TAG, "getAllUsers failed", e)
-        emptyList()
-    }
 
     suspend fun updateUserStatus(userId: String, status: UserStatus) {
         users.document(userId).update("status", status.name).await()
@@ -245,6 +285,13 @@ class UserRepository {
         is FirebaseAuthInvalidUserException,
         is FirebaseAuthInvalidCredentialsException -> "Incorrect email or password."
         is FirebaseNetworkException -> "No internet connection. Please try again."
+        is FirebaseFirestoreException -> when (e.code) {
+            FirebaseFirestoreException.Code.PERMISSION_DENIED ->
+                "Missing or insufficient permissions. Please deploy the Firestore security rules in Firebase Console."
+            FirebaseFirestoreException.Code.UNAVAILABLE ->
+                "Database service unavailable. Please check your internet connection."
+            else -> e.message ?: "Database error occurred."
+        }
         else -> e.message ?: "Something went wrong."
     }
 }

@@ -1,157 +1,193 @@
-HappyMinds 
+# HappyMinds 🌟
 
-A South African primary school learning app for Grades 1–7, built for Android.
-HappyMinds gives learners access to structured curriculum notes across four core
-subjects — all offline, no internet required.
+A South African primary school learning app for Grades 1–7, built for Android. **HappyMinds** gives learners access to structured CAPS-aligned curriculum notes across four core subjects — built with offline curriculum access and cloud-synced user progress via Firebase.
 
+---
 
-Table of Contents
+## 📋 Table of Contents
 
+- [About the App](#about-the-app)
+- [Key Features](#key-features)
+- [Tech Stack & Architecture](#tech-stack--architecture)
+- [Project Structure](#project-structure)
+- [Database & Firebase Setup](#database--firebase-setup)
+- [Firestore Security Rules](#firestore-security-rules)
+- [User Roles & Registration Flow](#user-roles--registration-flow)
+- [Curriculum Overview](#curriculum-overview)
+- [Build & Run Instructions](#build--run-instructions)
 
-About the App
-Features
-Screenshots Overview
-Tech Stack
-Project Structure
-Getting Started
-Admin Login
-How the Database Works
-Curriculum
-User Roles
-App Flow
-Build & Release
-Known Limitations
+---
 
+## 📱 About the App
 
+**HappyMinds** is a parent-managed learning companion for South African primary school learners in **Grades 1 to 7**. 
 
-About the App
+Parents register an account or sign in using **Google Sign-In**, complete their child's profile (name, age, and grade), and automatically access structured curriculum notes tailored for that grade level. Dedicated portals are also included for **Admins** (to review and approve registrations) and **Volunteers** (to submit helper applications).
 
-HappyMinds is a parent-managed learning companion for South African primary school
-learners in Grades 1 to 7. A parent registers an account, waits for admin approval,
-then sets up a child profile by selecting the child's name, age and grade. The app
-automatically loads the correct curriculum notes for that grade.
+---
 
-The app is fully offline — no internet connection is needed at any point.
+## 🚀 Key Features
 
+### For Learners
+- 📚 **Structured Lesson Notes**: Comprehensive notes for 84 lessons across 4 core subjects (Maths, English, Natural Science, Life Skills).
+- 📊 **Progress Tracking**: Real-time progress breakdown per lesson (0% to 100% complete).
+- 🔍 **Search & Filtering**: Search lessons by keyword or filter by subject chips.
+- 🎯 **Offline Curriculum**: All lesson notes and practice questions are available offline instantly.
 
-Features
+### For Parents
+- 🔐 **Flexible Sign-In**: Email/password authentication or **Continue with Google** via Android Credential Manager.
+- 👶 **Child Profile Management**: Easily set up and update child details (name, age, grade 1–7).
+- 📈 **Progress Dashboard**: View completed lessons, badges, and learning streak statistics.
+- 💳 **Support & Donations**: Support HappyMinds via integrated PayFast payments.
 
-For Learners
+### For Volunteers
+- 🤝 **Volunteer Application Form**: Submit volunteer applications with specialized skills and help areas for admin review.
 
+### For Admins
+- 🛡️ **Admin Portal**: Dedicated admin login verifying permissions against Firestore.
+- ✅ **Approval Management**: Review, approve, or decline pending learner and volunteer applications.
+- 💰 **Donation Monitoring**: Overview of total donations and user statistics.
 
-Structured lesson notes for every topic across 4 subjects
-Progress tracking per lesson (0%, in-progress, 100% complete)
-Start / Continue / Review button per lesson based on saved progress
-Subject filter chips (All, Maths, English, Science, Life Skills)
-Search lessons by name
-Overall progress dashboard with per-subject breakdown
+---
 
+## 🛠️ Tech Stack & Architecture
 
-For Parents
+- **Language & Runtime**: Kotlin (JVM 21)
+- **UI & Navigation**: AndroidX ViewBinding, Material Design 3, ConstraintLayout, RecyclerView, CardView, Navigation Component
+- **Authentication**: Firebase Authentication (Email/Password & Google Sign-In via `androidx.credentials` + `googleid`)
+- **Database**: Cloud Firestore
+- **Asynchronous Processing**: Kotlin Coroutines & `lifecycleScope`
+- **Build System**: Gradle Version Catalogs (`libs.versions.toml`)
 
+---
 
-Register an account (pending admin approval)
-Set up a child profile (name, age, grade 1–7)
-Edit profile at any time
-View child's progress and completed lessons
-Donate via the Support screen
+## 📁 Project Structure
 
+```
+HappyMinds/
+├── app/
+│   ├── src/main/java/com/happyminds/app/
+│   │   ├── data/
+│   │   │   ├── Models.kt              # Data models, status enums & CAPS curriculum definitions
+│   │   │   ├── UserRepository.kt      # Firebase Auth & Firestore user operations
+│   │   │   ├── DonationRepository.kt  # PayFast & donation Firestore operations
+│   │   │   └── FirestoreMappers.kt    # DocumentSnapshot extension mappers
+│   │   ├── ui/
+│   │   │   ├── admin/                 # Admin Dashboard & adapters
+│   │   │   ├── auth/                  # Login, Register, Google Sign-In & Volunteer screens
+│   │   │   ├── home/                  # HomeFragment & dashboard view
+│   │   │   ├── learn/                 # LearningCenterFragment & LessonDetailActivity
+│   │   │   ├── progress/              # ProgressFragment & statistics
+│   │   │   ├── profile/               # ProfileFragment, SupportFragment & PayFast Checkout
+│   │   │   └── community/             # CommunityFragment & event updates
+│   │   └── MainActivity.kt            # Bottom navigation container
+│   └── src/main/res/                  # Layouts, drawables, values & navigation graph
+├── firestore.rules                    # Cloud Firestore security rules
+├── README.md
+└── build.gradle.kts
+```
 
-For Admins
+---
 
+## 🗄️ Database & Firebase Setup
 
-Separate admin login (not visible to regular users on splash)
-Approve or reject pending user registrations
-View all registered users and their status
-View donation records
+HappyMinds uses **Firebase Authentication** and **Cloud Firestore**:
 
+- **Firebase Authentication**: Manages secure email/password accounts and Google OAuth sessions.
+- **Cloud Firestore**:
+  - `users/{uid}`: Holds user profiles, roles (`isVolunteer`), and account statuses (`PENDING`, `APPROVED`, `REJECTED`).
+  - `users/{uid}/progress/{lessonId}`: Tracks progress percentage and timestamps for each lesson.
+  - `admins/{uid}`: Stores admin authorization documents (`admins/{adminUid}`).
+  - `donations/{donationId}`: Stores PayFast donation transaction records.
 
-How the Database Works
+---
 
-HappyMinds uses two local storage mechanisms — no server or cloud database.
+## 🔐 Firestore Security Rules
 
-User Accounts — SharedPreferences + JSON
+Deploy the contents of [`firestore.rules`](file:///C:/Users/User/AndroidStudioProjects/HappyMinds%20app/firestore.rules) to your Firebase Console under **Firestore Database -> Rules**:
 
-All registered user accounts are stored as a JSON array in a private
-SharedPreferences file called happyminds_users.
+```firestore
+rules_version = '2';
 
+service cloud.firestore {
+  match /databases/{database}/documents {
 
-Each User object is serialised with Gson.
-Passwords are stored as a hash (String.hashCode()).
-The logged-in session is saved in a separate happyminds_session preferences file,
-so the user stays logged in after closing the app.
+    function isSignedIn() {
+      return request.auth != null;
+    }
 
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
 
-Lesson Progress — Room (per-user)
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
 
-Each user gets their own isolated Room database file:
+    // Users Collection
+    match /users/{userId} {
+      allow create: if isOwner(userId);
+      allow read, update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
 
-user_db_<userId>.db
+      match /progress/{lessonId} {
+        allow read, write: if isOwner(userId) || isAdmin();
+      }
+    }
 
-This means:
-After registration, the progress database is completely empty — nothing is
-pre-populated.
-Progress is only written when a learner opens a lesson and taps "Mark as Complete".
-If two children use the same device, their progress is fully separated.
+    // Admins Collection
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
 
+    // Donations Collection
+    match /donations/{donationId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() || isAdmin();
+    }
+  }
+}
+```
 
-Donations — Room (shared)
+---
 
-Donation records are stored in a shared Room database (user_db_shared.db)
-so the admin dashboard can view all donations regardless of which user submitted them.
+## 👥 User Roles & Registration Flow
 
+| Role | Access | Login Method |
+| :--- | :--- | :--- |
+| **Parent / Learner** | CAPS Curriculum, lesson notes, child profile & progress | Email/Password or Google Sign-In |
+| **Volunteer** | Application submission & skill details | Volunteer link on Login screen |
+| **Admin** | Approve/reject registrations, view user & donation stats | Admin Login link on Login screen |
 
-Curriculum
+### Account Lifecycle Flow
+1. **Parent/Volunteer Registers** → Status set to `PENDING` (Google accounts auto-set to `APPROVED`).
+2. **Admin Review** → Admin logs into Admin Dashboard and approves or declines the application.
+3. **Login & Profile Setup** → Approved accounts log in and set up child grade details to access the curriculum.
 
-The curriculum is defined entirely in Curriculum.kt inside Models.kt.
-No network calls are made — all content is hardcoded in Kotlin strings.
+---
 
-Grades
+## 📖 Curriculum Overview
 
-Grades 1 through 7 are supported.
+The CAPS-aligned curriculum is defined in [`Models.kt`](file:///C:/Users/User/AndroidStudioProjects/HappyMinds%20app/app/src/main/java/com/happyminds/app/data/Models.kt).
 
-Subjects 
+- **Grades Supported**: Grade 1 through Grade 7.
+- **Core Subjects**:
+  - 🔢 Mathematics
+  - 📖 English
+  - 🔬 Natural Science
+  - 🎨 Life Skills
+- **Total Content**: 12 lessons per grade × 7 grades = **84 structured lessons**.
+- **Lesson Structure**: Learning objectives, core notes, practice questions, and self-check answers.
 
-SubjectEmojiMathematics
-English
-Natural Science
-Life Skills
+---
 
-Lessons per grade
+## 🏗️ Build & Run Instructions
 
-Each grade has 3 lessons per subject = 12 lessons per grade = 84 lessons total.
-
-Lesson notes format
-
-Every lesson note contains:
-
-
-Learning objectives — what the learner will achieve
-Notes section — clear explanations with examples, tables and diagrams (text)
-Practice questions — 4–5 questions per lesson
-Answers — provided at the end so learners can self-check
-
-
-Adding or editing lessons
-
-To change lesson content, open:
-
-app/src/main/java/com/happyminds/app/data/Models.kt
-
-Find the relevant mathsFor(), englishFor(), scienceFor() or lifeSkillsFor()
-function. Locate the correct grade block (when (g)) and edit the note string
-inside the L(...) call.
-
-
-User Roles
-
-RoleAccessHow to log inParentRegister + set up child profile, view learning centre and progressRegister → await approval → loginAdminApprove/reject users, view donationsAdmin Login link on login screenVolunteerSubmit a volunteer applicationVolunteer link on login screen
-
-Registration flow
-
-Parent registers → status = PENDING
-Admin logs in → approves account → status = APPROVED
-Parent logs in → completes child profile → enters learning centre
-
-If an account is PENDING, login shows: "Your account is pending admin approval."
-If REJECTED, login shows: "Your account request was declined."
+1. Clone or open the project in **Android Studio**.
+2. Connect your Firebase project by placing `google-services.json` inside the `app/` folder.
+3. Deploy the [`firestore.rules`](file:///C:/Users/User/AndroidStudioProjects/HappyMinds%20app/firestore.rules) in Firebase Console.
+4. Build and run the app:
+   ```bash
+   ./gradlew assembleDebug
+   ```

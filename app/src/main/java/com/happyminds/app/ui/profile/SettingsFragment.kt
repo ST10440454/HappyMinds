@@ -5,10 +5,12 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.happyminds.app.R
 import com.happyminds.app.data.UserRepository
 import com.happyminds.app.data.UserSession
 import com.happyminds.app.databinding.FragmentSettingsBinding
@@ -32,12 +34,41 @@ class SettingsFragment : Fragment() {
 
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
 
+        val grades = (1..7).map { "Grade $it" }
+        val adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, grades)
+        adapter.setDropDownViewResource(R.layout.spinner_item)
+        binding.spinnerGrade.adapter = adapter
+
         UserSession.currentUser?.let { user ->
+            binding.etFullName.setText(user.fullName)
+            binding.etChildName.setText(user.childName)
+            binding.etAge.setText(user.age)
+            binding.spinnerGrade.setSelection(((user.grade.toIntOrNull() ?: 1) - 1).coerceIn(0, 6))
             binding.tvCurrentEmail.text = "Signed in as ${user.email}"
         }
 
+        binding.btnSaveProfile.setOnClickListener { saveProfile() }
         binding.btnChangeEmail.setOnClickListener { changeEmail() }
         binding.btnChangePassword.setOnClickListener { changePassword() }
+    }
+
+    private fun saveProfile() {
+        val user = UserSession.currentUser ?: return
+        val fullName = binding.etFullName.text.toString().trim()
+        val childName = binding.etChildName.text.toString().trim()
+        val age = binding.etAge.text.toString().trim()
+        val grade = (binding.spinnerGrade.selectedItemPosition + 1).toString()
+
+        if (fullName.isEmpty() || childName.isEmpty() || age.isEmpty()) {
+            toast("Please fill in all profile fields"); return
+        }
+        binding.btnSaveProfile.isEnabled = false
+        viewLifecycleOwner.lifecycleScope.launch {
+            val result = repo.updateProfile(user.id, childName, age, grade, fullName)
+            _binding?.btnSaveProfile?.isEnabled = true
+            result.onSuccess { toast("Profile updated ✅") }
+                  .onFailure { toast("Update failed: ${it.message}") }
+        }
     }
 
     private fun changeEmail() {

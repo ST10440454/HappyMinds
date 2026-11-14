@@ -1,55 +1,78 @@
 package com.happyminds.app.data
 
-import android.util.Log
-import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.CancellationException
+import com.google.firebase.firestore.ListenerRegistration
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.net.HttpURLConnection
+import java.net.URL
+import java.util.Locale
 
+/** The address of your deployed Cloudflare Worker (printed by `npx wrangler deploy`). */
+const val WORKER_URL = "https://happyminds-payfast.connecthub-za.workers.dev"
 
-fun Donation.toMap(): Map<String, Any> = mapOf(
-    "id" to id,
-    "userId" to userId,
-    "amount" to amount,
-    "frequency" to frequency,
-    "fullName" to fullName,
-    "email" to email,
-    "cardLast4" to cardLast4,
-    "timestamp" to timestamp
-)
-
-fun DocumentSnapshot.toDonation(): Donation? {
-    return try {
-        val donation = toObject(Donation::class.java) ?: return null
-        donation.copy(id = id)
-    } catch (e: Exception) {
-        null
-    }
-}
-
+/**
+ * Payments go through PayFast:
+ *   app -> Worker /create (with the user's Firebase token) -> signed PayFast URL -> Custom Tab
+ *   PayFast -> Worker /itn -> Worker marks the donation COMPLETE in Firestore
+ * The merchant key and passphrase live only in the Worker, never in the app.
+ */
 class DonationRepository {
 
-    private val db = FirebaseFirestore.getInstance()
-    private val donationsCollection = db.collection("donations")
+    private val donations = FirebaseFirestore.getInstance().collection("donations")
 
-    companion object {
-        private const val TAG = "DonationRepository"
-    }
+    /** Asks the Worker to create a PENDING donation. Returns (donationId, payfastUrl). */
+    suspend fun startPayment(
+        amount: Double, fullName: String, email: String, method: String = "cc"
+    ): Pair<String, String> =
+        withContext(Dispatchers.IO) {
+            val token = FirebaseAuth.getInstance().currentUser?.getIdToken(false)?.await()?.token
+                ?: throw Exception("Please sign in again.")
 
-    suspend fun addDonation(donation: Donation): Boolean {
-        val docRef = donationsCollection.document()
-        val donationWithId = donation.copy(id = docRef.id)
-        docRef.set(donationWithId.toMap()).await()
-        return true
-    }
+            val body = JSONObject()
+                .put("amount", String.format(Locale.US, "%.2f", amount))
+                .put("frequency", "once")
+                .put("fullName", fullName)
+                .put("email", email)
+                .put("method", method)   // "cc" credit card or "dc" debit card
+                .toString()
 
-    suspend fun getAllDonations(): List<Donation> = try {
-        donationsCollection.get().await().documents.mapNotNull { it.toDonation() }
+            val conn = (URL("$WORKER_URL/create").openConnection() as HttpURLConnection).apply {
+                requestMethod = "POST"
+                connectTimeout = 15_000
+                readTimeout = 20_000
+                setRequestProperty("Authorization", "Bearer $token")
+                setRequestProperty("Content-Type", "application/json")
+                doOutput = true
+            }
+            try {
+                conn.outputStream.use { it.write(body.toByteArray()) }
+                val ok = conn.responseCode in 200..299
+                val text = (if (ok) conn.inputStream else conn.errorStream)
+                    ?.bufferedReader()?.use { it.readText() }.orEmpty()
+                if (!ok) {
+                    val msg = runCatching { JSONObject(text).optString("error") }.getOrNull()
+                    throw Exception(if (msg.isNullOrBlank()) "Payment could not be started." else msg)
+                }
+                val json = JSONObject(text)
+                json.getString("donationId") to json.getString("url")
+            } finally {
+                conn.disconnect()
+            }
+        }
+
+    /** Calls [onStatus] with the donation's status now and every time it changes. */
+    fun watchStatus(donationId: String, onStatus: (String) -> Unit): ListenerRegistration =
+        donations.document(donationId).addSnapshotListener { snap, _ ->
+            snap?.getString("status")?.let(onStatus)
+        }
+
+    /** Admin only (enforced by Firestore security rules). */
+    suspend fun getAllDonations(): List<Donation> =
+        donations.get().await()
+            .documents.mapNotNull { it.toDonation() }
             .sortedByDescending { it.timestamp }
-    } catch (e: CancellationException) {
-        throw e
-    } catch (e: Exception) {
-        Log.w(TAG, "getAllDonations failed", e)
-        emptyList()
-    }
 }

@@ -16,11 +16,16 @@ class AdminDonationAdapter(
     inner class VH(private val b: ItemAdminDonationBinding) : RecyclerView.ViewHolder(b.root) {
         fun bind(d: Donation) {
             b.tvDonorName.text    = d.fullName
-            b.tvAmount.text       = "R${d.amount} · ${d.frequency}"
+            b.tvAmount.text       = "R${"%.2f".format(d.amount)}"
             b.tvDonationDate.text = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
                 .format(Date(d.timestamp))
-            // mask card number for display
-            b.tvMessage?.text = "Card: **** **** **** ${d.cardLast4}"
+            val status = when (d.status) {
+                Donation.STATUS_COMPLETE -> "Paid ✅"
+                Donation.STATUS_PENDING -> "Awaiting payment ⏳"
+                else -> "Not paid ❌ (${d.status.lowercase()})"
+            }
+            val payfastId = if (d.pfPaymentId.isNotEmpty()) " · PayFast #${d.pfPaymentId}" else ""
+            b.tvMessage?.text = "$status$payfastId"
         }
     }
 

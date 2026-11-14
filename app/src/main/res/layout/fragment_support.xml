@@ -124,6 +124,7 @@
 
                     <!-- Frequency -->
                     <TextView
+                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
@@ -134,12 +135,12 @@
 
                     <Spinner
                         android:id="@+id/spinnerFrequency"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="8dp"
                         android:background="@drawable/bg_spinner"
-                        android:entries="@array/donation_frequencies"
-                        android:textColor="@color/text_medium"
+                        android:textColor="@color/text_dark"
                         android:paddingHorizontal="8dp" />
 
                     <!-- Full name -->
@@ -186,39 +187,59 @@
                         android:textColor="@color/text_dark"
                         android:textSize="14sp" />
 
-                    <!-- Payment details -->
+                    <!-- Card type -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="Payment details"
+                        android:text="Pay with"
                         android:textColor="@color/text_medium"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
-                    <EditText
-                        android:id="@+id/etCardNumber"
+                    <RadioGroup
+                        android:id="@+id/radioCardType"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/card_background"
-                        android:hint="Card number"
-                        android:inputType="number"
-                        android:paddingHorizontal="16dp"
-                        android:textColor="@color/text_dark"
-                        android:textSize="14sp" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal">
 
-                    <EditText
-                        android:id="@+id/etCvc"
+                        <RadioButton
+                            android:id="@+id/rbCredit"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:text="Credit card"
+                            android:textColor="@color/text_dark"
+                            android:textSize="14sp" />
+
+                        <RadioButton
+                            android:id="@+id/rbDebit"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Debit card"
+                            android:textColor="@color/text_dark"
+                            android:textSize="14sp" />
+                    </RadioGroup>
+
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/card_background"
-                        android:hint="CVC"
-                        android:inputType="number"
-                        android:paddingHorizontal="16dp"
-                        android:textColor="@color/text_dark"
-                        android:textSize="14sp" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Only Visa and Mastercard cards are accepted."
+                        android:textColor="@color/text_medium"
+                        android:textSize="12sp" />
+
+                    <!-- Payment info -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Tap Complete donation to open PayFast's secure payment form inside the app and enter your card details there. They go straight to PayFast and are never stored or seen by this app."
+                        android:textColor="@color/text_medium"
+                        android:textSize="13sp" />
 
                     <!-- Bank transfer details -->
                     <TextView

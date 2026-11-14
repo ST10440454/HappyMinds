@@ -156,39 +156,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:orientation="horizontal"
+horizontal"
             android:gravity="center"
-            android:layout_marginTop="24dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Already have an account? "
-                    android:textColor="@color/text_medium"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/tvLogin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Login"
-                    android:textColor="@color/teal_primary"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+            android:layout_marginTop="32dp">
 
             <TextView
-                android:id="@+id/tvVolunteerRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="Want to help out? Become a Volunteer"
-                android:textColor="@color/orange_primary"
+                android:text="Already have an account? "
+                android:textColor="@color/text_medium"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Login"
+                android:textColor="@color/teal                android:text="Login"
+                android:textColor="@color/teal_primary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
         </LinearLayout>

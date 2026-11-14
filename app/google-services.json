@@ -12,7 +12,12 @@
           "package_name": "com.happyminds.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "801233777781-896jiqm4u88vpbq5u3auj8m35tfspnl0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCeLYpWVB1iigNZ4nedtp1yWjOheWIN6kI"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "801233777781-896jiqm4u88vpbq5u3auj8m35tfspnl0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

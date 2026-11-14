@@ -1,6 +1,5 @@
 package com.happyminds.app.ui.auth
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -57,10 +56,5 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         binding.tvLogin.setOnClickListener { finish() }
-
-        binding.tvVolunteerRegister?.setOnClickListener {
-            startActivity(Intent(this, VolunteerRegistrationActivity::class.java))
-            finish()
-        }
     }
 }

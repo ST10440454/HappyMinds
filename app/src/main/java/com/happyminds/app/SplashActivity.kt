@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.happyminds.app.data.UserRepository
+import com.happyminds.app.data.needsChildSetup
 import com.happyminds.app.ui.auth.LoginActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -21,7 +22,7 @@ class SplashActivity : AppCompatActivity() {
 
             val intent = when {
                 user == null                              -> Intent(this@SplashActivity, LoginActivity::class.java)
-                user.childName.isEmpty() || user.grade.isEmpty() ->
+                user.needsChildSetup() ->
                     Intent(this@SplashActivity, com.happyminds.app.ui.auth.SetupProfileActivity::class.java)
                 else                                      -> Intent(this@SplashActivity, MainActivity::class.java)
             }
