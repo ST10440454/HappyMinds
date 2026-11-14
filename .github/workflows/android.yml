@@ -23,8 +23,15 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
 
+    - name: Setup Google Services JSON
+      if: ${{ secrets.GOOGLE_SERVICES_JSON != '' }}
+      run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > app/google-services.json
+
     - name: Make gradlew executable
       run: chmod +x gradlew
+
+    - name: Run Unit Tests
+      run: ./gradlew testDebugUnitTest
 
     - name: Build Android APK (Debug)
       run: ./gradlew assembleDebug
@@ -36,12 +43,15 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: android-debug-apk
-        path: "**/build/outputs/apk/debug/*.apk"
+        path: app/build/outputs/apk/debug/*.apk
+        if-no-files-found: error
         retention-days: 7
 
     - name: Upload AAB Artifact
       uses: actions/upload-artifact@v4
       with:
         name: android-release-aab
-        path: "**/build/outputs/bundle/release/*.aab"
+        path: app/build/outputs/bundle/release/*.aab
+        if-no-files-found: error
         retention-days: 7
+

@@ -157,7 +157,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-horizontal"
             android:gravity="center"
             android:layout_marginTop="32dp">
 
@@ -173,7 +172,6 @@ horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Login"
-                android:textColor="@color/teal                android:text="Login"
                 android:textColor="@color/teal_primary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
