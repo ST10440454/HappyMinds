@@ -5,10 +5,13 @@ on:
     branches: [ "main", "master" ]
   pull_request:
     branches: [ "main", "master" ]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
     - name: Checkout Repository
@@ -24,8 +27,33 @@ jobs:
       uses: gradle/actions/setup-gradle@v4
 
     - name: Setup Google Services JSON
-      if: ${{ secrets.GOOGLE_SERVICES_JSON != '' }}
-      run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > app/google-services.json
+      run: |
+        if [ -n "${{ secrets.GOOGLE_SERVICES_JSON }}" ]; then
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > app/google-services.json
+        elif [ ! -f "app/google-services.json" ]; then
+          echo "Generating fallback app/google-services.json for CI..."
+          cat << 'EOF' > app/google-services.json
+          {
+            "project_info": {
+              "project_number": "801233777781",
+              "project_id": "happymind-fc3b4",
+              "storage_bucket": "happymind-fc3b4.firebasestorage.app"
+            },
+            "client": [
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "1:801233777781:android:905e47aea7a6ee7cc8343c",
+                  "android_client_info": { "package_name": "com.happyminds.app" }
+                },
+                "oauth_client": [],
+                "api_key": [{ "current_key": "AIzaSyCeLYpWVB1iigNZ4nedtp1yWjOheWIN6kI" }],
+                "services": {}
+              }
+            ],
+            "configuration_version": "1"
+          }
+          EOF
+        fi
 
     - name: Make gradlew executable
       run: chmod +x gradlew
@@ -54,4 +82,3 @@ jobs:
         path: app/build/outputs/bundle/release/*.aab
         if-no-files-found: error
         retention-days: 7
-
