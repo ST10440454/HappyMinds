@@ -27,32 +27,14 @@ jobs:
       uses: gradle/actions/setup-gradle@v4
 
     - name: Setup Google Services JSON
+      env:
+        GOOGLE_SERVICES_SECRET: ${{ secrets.GOOGLE_SERVICES_JSON }}
       run: |
-        if [ -n "${{ secrets.GOOGLE_SERVICES_JSON }}" ]; then
-          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > app/google-services.json
-        elif [ ! -f "app/google-services.json" ]; then
-          echo "Generating fallback app/google-services.json for CI..."
-          cat << 'EOF' > app/google-services.json
-          {
-            "project_info": {
-              "project_number": "801233777781",
-              "project_id": "happymind-fc3b4",
-              "storage_bucket": "happymind-fc3b4.firebasestorage.app"
-            },
-            "client": [
-              {
-                "client_info": {
-                  "mobilesdk_app_id": "1:801233777781:android:905e47aea7a6ee7cc8343c",
-                  "android_client_info": { "package_name": "com.happyminds.app" }
-                },
-                "oauth_client": [],
-                "api_key": [{ "current_key": "AIzaSyCeLYpWVB1iigNZ4nedtp1yWjOheWIN6kI" }],
-                "services": {}
-              }
-            ],
-            "configuration_version": "1"
-          }
-          EOF
+        if [ -n "$GOOGLE_SERVICES_SECRET" ]; then
+          echo "$GOOGLE_SERVICES_SECRET" | base64 --decode > app/google-services.json
+        fi
+        if [ ! -f "app/google-services.json" ]; then
+          echo '{"project_info":{"project_number":"801233777781","project_id":"happymind-fc3b4","storage_bucket":"happymind-fc3b4.firebasestorage.app"},"client":[{"client_info":{"mobilesdk_app_id":"1:801233777781:android:905e47aea7a6ee7cc8343c","android_client_info":{"package_name":"com.happyminds.app"}},"oauth_client":[],"api_key":[{"current_key":"AIzaSyCeLYpWVB1iigNZ4nedtp1yWjOheWIN6kI"}],"services":{}}],"configuration_version":"1"}' > app/google-services.json
         fi
 
     - name: Make gradlew executable
