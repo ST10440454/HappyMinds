@@ -2,6 +2,8 @@
 
 A South African primary school learning app for Grades 1–7, built for Android. **HappyMinds** gives learners access to structured CAPS-aligned curriculum notes across four core subjects — built with offline curriculum access and cloud-synced user progress via Firebase.
 
+ # Video Presentation
+ https://advtechonline-my.sharepoint.com/:v:/g/personal/st10447931_rcconnect_edu_za/IQBFyFPjUks3RIPfA-1NyV1TATh-XH3Ne3jwHFhOpxCud6Q
 ---
 
 ## 📋 Table of Contents
